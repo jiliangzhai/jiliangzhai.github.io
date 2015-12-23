@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2015-12-22T14:58:01.000Z</updated>
+  <updated>2015-12-23T11:19:12.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -15,65 +15,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[secondblog]]></title>
-    <link href="http://rustblogs.com/2015/12/22/secondblog/"/>
-    <id>http://rustblogs.com/2015/12/22/secondblog/</id>
-    <published>2015-12-22T14:58:01.000Z</published>
-    <updated>2015-12-22T14:58:01.000Z</updated>
-    <content type="html"></content>
-    <summary type="html">
-    
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Hello World]]></title>
-    <link href="http://rustblogs.com/2015/12/22/hello-world/"/>
-    <id>http://rustblogs.com/2015/12/22/hello-world/</id>
-    <published>2015-12-22T14:46:42.000Z</published>
-    <updated>2015-12-22T14:46:42.000Z</updated>
-    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start"><a href="#Quick_Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create_a_new_post"><a href="#Create_a_new_post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server"><a href="#Run_server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files"><a href="#Generate_static_files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites"><a href="#Deploy_to_remote_sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[test]]>
-    
-    </summary>
-    
-      <category term="test" scheme="http://rustblogs.com/tags/test/"/>
-    
-      <category term="test" scheme="http://rustblogs.com/categories/test/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[friestblog]]></title>
     <link href="http://rustblogs.com/2015/12/21/friestblog/"/>
     <id>http://rustblogs.com/2015/12/21/friestblog/</id>
     <published>2015-12-21T14:46:40.000Z</published>
-    <updated>2015-12-22T14:10:40.000Z</updated>
-    <content type="html"><![CDATA[<h1 id="u8FD9_u662F_u4E00_u7BC7_u6D4B_u8BD5"><a href="#u8FD9_u662F_u4E00_u7BC7_u6D4B_u8BD5" class="headerlink" title="这是一篇测试"></a>这是一篇测试</h1><h2 id="u8FD9_u662F_u4E00_u7BC7_u6D4B_u8BD5-1"><a href="#u8FD9_u662F_u4E00_u7BC7_u6D4B_u8BD5-1" class="headerlink" title="这是一篇测试"></a>这是一篇测试</h2><h3 id="u4EE5_u540E_u6253_u7B97_u5199_u7684_u5185_u5BB9_u6709_uFF1A"><a href="#u4EE5_u540E_u6253_u7B97_u5199_u7684_u5185_u5BB9_u6709_uFF1A" class="headerlink" title="以后打算写的内容有："></a>以后打算写的内容有：</h3><ol>
-<li>自己写的DEMO</li>
-<li>知识点总结</li>
-<li>计算机网络算法的学习</li>
-</ol>
+    <updated>2015-12-23T11:19:12.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><a href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2" class="headerlink" title="利用hexo搭建博客"></a>利用hexo搭建博客</h2><p>本博客是利用hexo+github+七牛做图床搭建的，并绑定了个人域名至guthub，使用的主题名是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>。</p>
+<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令</p>
+<p><code>npm install -g hexo</code></p>
+<p><code>hexo init</code></p>
+<p>即可安装。</p>
+<p>hexo常用命令：</p>
+<p><code>hexo new &quot;postName&quot;</code> //新建文章</p>
+<p><code>hexo server</code> // 启用本地服务</p>
+<p><code>hexo clean</code> //清除缓存</p>
+<p><code>hexo g</code> //生成静态网页</p>
+<p><code>hexo d</code> //开始部署</p>
+<p>博客内容使用Markdown进行编写，推荐MOU编辑器。</p>
+<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><p>github账号很多人都会有，需要做的就是建立一个名为userName.github.io的仓库，然后在你的博客根目录的_config.yml中进行配置久OK啦。</p>
+<h3 id="u56FE_u5E8A"><a href="#u56FE_u5E8A" class="headerlink" title="图床"></a>图床</h3><p>我使用的是七牛云储存，大致过程为申请账号，建立空间，同步本地文件至空间，然后就可以使用外链了。<br>同步本地文件至空间使用的是qrsync同步工具，具体教程可以看这篇文章：<a href="http://www.douban.com/note/526859806/" target="_blank" rel="external">如何使用七牛云做为图床</a>。</p>
+<h3 id="u4E3B_u9898"><a href="#u4E3B_u9898" class="headerlink" title="主题"></a>主题</h3><p>本博客使用的是 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，比较简洁，作者写的配置信息很详细，有兴趣的同学可以看一下。</p>
+<p>###第一篇博客的结束语</p>
+<p>博客搭建的过程大概就是这些了，本人IOS开发菜鸟目前还在机械行业工作，博客以后的内容主要会以IOS开发为主，还会有学习相关知识的内容。希望自己加油。</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg" alt="image"></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[你猜]]>
+    <![CDATA[开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。]]>
     
     </summary>
     
-      <category term="fristblog" scheme="http://rustblogs.com/tags/fristblog/"/>
+      <category term="hexo blog" scheme="http://rustblogs.com/tags/hexo-blog/"/>
     
-      <category term="fristblog" scheme="http://rustblogs.com/categories/fristblog/"/>
+      <category term="杂" scheme="http://rustblogs.com/categories/%E6%9D%82/"/>
     
   </entry>
   
