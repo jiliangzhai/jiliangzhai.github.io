@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2015-12-23T11:22:31.000Z</updated>
+  <updated>2015-12-23T11:27:58.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[friestblog]]></title>
+    <title><![CDATA[第一篇博客]]></title>
     <link href="http://rustblogs.com/2015/12/21/friestblog/"/>
     <id>http://rustblogs.com/2015/12/21/friestblog/</id>
     <published>2015-12-21T14:46:40.000Z</published>
-    <updated>2015-12-23T11:22:31.000Z</updated>
+    <updated>2015-12-23T11:27:58.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><a href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2" class="headerlink" title="利用hexo搭建博客"></a>利用hexo搭建博客</h2><p>本博客是利用hexo+github+七牛做图床搭建的，并绑定了个人域名至guthub，使用的主题名是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>。</p>
 <h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令</p>
 <p><code>npm install -g hexo</code></p>
@@ -35,8 +35,7 @@
 <h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><p>github账号很多人都会有，需要做的就是建立一个名为userName.github.io的仓库，然后在你的博客根目录的_config.yml中进行配置就OK啦。</p>
 <h3 id="u56FE_u5E8A"><a href="#u56FE_u5E8A" class="headerlink" title="图床"></a>图床</h3><p>我使用的是七牛云储存，大致过程为申请账号，建立空间，同步本地文件至空间，然后就可以使用外链了。<br>同步本地文件至空间使用的是qrsync同步工具，具体教程可以看这篇文章：<a href="http://www.douban.com/note/526859806/" target="_blank" rel="external">如何使用七牛云做为图床</a>。</p>
 <h3 id="u4E3B_u9898"><a href="#u4E3B_u9898" class="headerlink" title="主题"></a>主题</h3><p>本博客使用的是 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，比较简洁，作者写的配置信息很详细，有兴趣的同学可以看一下。</p>
-<p>###第一篇博客的结束语</p>
-<p>博客搭建的过程大概就是这些了，本人IOS开发菜鸟目前还在机械行业工作，博客以后的内容主要会以IOS开发为主，还会有学习相关知识的内容。希望自己加油。</p>
+<h3 id="u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED"><a href="#u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED" class="headerlink" title="第一篇博客的结束语"></a>第一篇博客的结束语</h3><p>博客搭建的过程大概就是这些了，本人IOS开发菜鸟目前还在机械行业工作，博客以后的内容主要会以IOS开发为主，还会有学习相关知识的内容。希望自己加油。</p>
 <p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg" alt="image"></p>
 ]]></content>
     <summary type="html">
