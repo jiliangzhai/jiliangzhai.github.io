@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2015-12-23T11:27:58.000Z</updated>
+  <updated>2015-12-23T11:30:01.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -19,9 +19,9 @@
     <link href="http://rustblogs.com/2015/12/21/friestblog/"/>
     <id>http://rustblogs.com/2015/12/21/friestblog/</id>
     <published>2015-12-21T14:46:40.000Z</published>
-    <updated>2015-12-23T11:27:58.000Z</updated>
+    <updated>2015-12-23T11:30:01.000Z</updated>
     <content type="html"><![CDATA[<h2 id="u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><a href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2" class="headerlink" title="利用hexo搭建博客"></a>利用hexo搭建博客</h2><p>本博客是利用hexo+github+七牛做图床搭建的，并绑定了个人域名至guthub，使用的主题名是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>。</p>
-<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令</p>
+<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令：</p>
 <p><code>npm install -g hexo</code></p>
 <p><code>hexo init</code></p>
 <p>即可安装。</p>
