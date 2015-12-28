@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2015-12-28T14:43:12.000Z</updated>
+  <updated>2015-12-28T14:51:36.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://rustblogs.com/2015/12/26/gdc/"/>
     <id>http://rustblogs.com/2015/12/26/gdc/</id>
     <published>2015-12-26T03:07:00.000Z</published>
-    <updated>2015-12-28T14:43:12.000Z</updated>
+    <updated>2015-12-28T14:51:36.000Z</updated>
     <content type="html"><![CDATA[<h2 id="GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5"><a href="#GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5" class="headerlink" title="GCD基础及常用方法"></a>GCD基础及常用方法</h2><p>GCD(Grand Center Dispatch)是c语言开发的一套多线程机制。GCD是一种与块紧密相连的技术，开发者只需要将快排入队列中，GCD会负责处理所有的调度事宜。</p>
 <h3 id="GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5"><a href="#GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5" class="headerlink" title="GCD中的一些概念"></a>GCD中的一些概念</h3><p><strong>串行(serial)</strong>与<strong>并行(concurrent)</strong></p>
 <p> 这两个概念是相关任务能否同时执行的问题，串行执行就是每次只执行一个任务，除被执行的任务外，其余任务处于等待状态，执行的顺序就是任务加入队列的顺序。并行执行可以同时执行多个任务。</p>
@@ -329,6 +329,8 @@ dispatch_semaphore_signal(sema);
     </summary>
     
       <category term="ios GCD" scheme="http://rustblogs.com/tags/ios-GCD/"/>
+    
+      <category term="ios开发" scheme="http://rustblogs.com/categories/ios%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
