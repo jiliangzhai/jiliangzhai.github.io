@@ -65,7 +65,7 @@
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif08.gif">
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif09.gif">
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif11.gif">
-<meta property="og:updated_time" content="2015-12-28T14:39:49.000Z">
+<meta property="og:updated_time" content="2015-12-28T14:43:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ios开发－GCD实现多线程开发">
 <meta name="twitter:description" content="用户在使用程序时期望最小的等待时间，多线程技术有利于充分发挥处理器性能，提高运行效率并能解决线程阻塞的问题。常用的多线程开发有三种方式：NSTread NSOperation GCD。在这篇博客中我们学习的是GCD,这也是目前比较推荐的方式。">
@@ -541,7 +541,7 @@ dispatch_semaphore_signal(sema);
 }
 </code></pre><p><code>loadImage</code>创建15个线程执行<code>getData</code>,于<code>NSLock</code>不同的是当进入锁中的线程处于 <code>wait</code>状态时其他线程是可以进入锁中的。<code>creatImage</code>会发出<code>signal</code>信号。随机唤醒一个线程进行图片加载和UI更新。效果如下：</p>
 <p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif11.gif" alt="loadImageWithControl"></p>
-<h3 id="u7ED3_u8BED"><a href="#u7ED3_u8BED" class="headerlink" title="结语"></a>结语</h3><p>本片博客就是以上内容，详细代码在<a href="https://github.com/jiliangzhai/RUSTGCDDemo" target="_blank" rel="external">DEMO</a>中，有兴趣的同学可以下载看一下，最后推荐两个博客。本篇内容很多也是参考这两篇博客。</p>
+<h3 id="u7ED3_u8BED"><a href="#u7ED3_u8BED" class="headerlink" title="结语"></a>结语</h3><p>本片博客就是以上内容，详细代码在<a href="https://github.com/jiliangzhai/RUSTGCDDemo" target="_blank" rel="external">DEMO</a>中，有兴趣的同学可以下载看一下，最后推荐两个博客。本篇中的一些内容也是参考这两篇博客。</p>
 <p><a href="http://www.cnblogs.com/kenshincui/p/3983982.html#GCD" target="_blank" rel="external">iOS开发系列–并行开发其实很容易</a></p>
 <p><a href="http://tutuge.me/2015/04/03/something-about-gcd/" target="_blank" rel="external">GCD使用经验与技巧浅谈</a></p>
 </span>
