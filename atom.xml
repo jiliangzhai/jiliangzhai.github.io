@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2015-12-23T11:30:01.000Z</updated>
+  <updated>2015-12-28T14:39:49.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -13,6 +13,324 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ios开发－GCD实现多线程开发]]></title>
+    <link href="http://rustblogs.com/2015/12/26/gdc/"/>
+    <id>http://rustblogs.com/2015/12/26/gdc/</id>
+    <published>2015-12-26T03:07:00.000Z</published>
+    <updated>2015-12-28T14:39:49.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5"><a href="#GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5" class="headerlink" title="GCD基础及常用方法"></a>GCD基础及常用方法</h2><p>GCD(Grand Center Dispatch)是c语言开发的一套多线程机制。GCD是一种与块紧密相连的技术，开发者只需要将快排入队列中，GCD会负责处理所有的调度事宜。</p>
+<h3 id="GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5"><a href="#GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5" class="headerlink" title="GCD中的一些概念"></a>GCD中的一些概念</h3><p><strong>串行(serial)</strong>与<strong>并行(concurrent)</strong></p>
+<p> 这两个概念是相关任务能否同时执行的问题，串行执行就是每次只执行一个任务，除被执行的任务外，其余任务处于等待状态，执行的顺序就是任务加入队列的顺序。并行执行可以同时执行多个任务。</p>
+<p><strong>同步(synchronous)</strong>与<strong>异步(asynchronous)</strong></p>
+<p>这两个概念是有关某一任务完成是否可以立即返回的问题。同步执行需要队列中的所有预定任务都完成后才能返回，并行则不需要某一任务完成后即可返回。</p>
+<p><strong>并发</strong>于<strong>并行</strong></p>
+<p>并发与并行的区别主要在于是否真正同时执行两个程序，并行是这样的，并发往往是在不同程序间切换，以同时执行多个程序。</p>
+<p><strong>主队列</strong></p>
+<p>GCD有一个特殊队列就是主队列，用以执行主线程中的任务，UI的更新都应该放到主线程中去执行。</p>
+<h3 id="u521B_u5EFA_u961F_u5217"><a href="#u521B_u5EFA_u961F_u5217" class="headerlink" title="创建队列"></a>创建队列</h3><p>创建串行队列的方法如下：</p>
+<pre><code>dispatch_queue_t serialQueue =     dispatch_queue_creat(&quot;queueName&quot;,DISPATCH_QUEUE_SERIAL);
+</code></pre><p>创建并发队列方法有两种：</p>
+<pre><code>dispatch_queue_t serialQueue =     dispatch_queue_creat(&quot;queueName&quot;,DISPATCH_QUEUE_CONCURRENT);
+</code></pre><p>或者使用系统提供的全局并发队列：</p>
+<pre><code>dispatch_queue_t globlaQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+</code></pre><h3 id="u8C03_u7528_u65B9_u6CD5"><a href="#u8C03_u7528_u65B9_u6CD5" class="headerlink" title="调用方法"></a>调用方法</h3><p>基本调用方法有两种，同步调用和异步调用，区别已经讲过，调用方法如下：</p>
+<pre><code>dispatch_async(serialQueue,^{
+    //do something
+});//异步调用
+
+dispatch_sync(serisalQueue,^{
+    //do something
+});//同步调用
+</code></pre><p>在主线程中使用同步方法提交<code>block</code>，会导致死锁。</p>
+<p>其他调用方法:</p>
+<pre><code>static dispatch_once_t once;
+dispatch_once(&amp;once,^{
+    //do something
+});
+</code></pre><p>只执行1次，重复调用也不会重复执行，常用于单例模式。</p>
+<pre><code> dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*numOfSeconds);
+dispatch_after(time, queue, ^{
+    //do something
+});
+</code></pre><p>将任务延迟加入队列，达到延迟执行的效果。</p>
+<pre><code>dispatch_suspend(queue);
+</code></pre><p>挂起队列，挂起时如有<code>block</code>正在执行，会等<code>block</code>执行后暂停后续的<code>block</code>的执行。</p>
+<pre><code>dispatch_resume(queue);
+</code></pre><p>恢复任务的执行。</p>
+<pre><code>dispatch_apply(size_t iterations, dispatch_queue_t queue, ^(size_t) {
+    //do something
+});
+</code></pre><p>循环执行<code>block</code>，三个参数分别为：循环的次数 队列 要执行的<code>block</code>。只有当循环完成后才回返回，因此会阻塞线程。另要避免<code>dispatch_apply</code>的嵌套使用，会导致死锁。</p>
+<pre><code>dispatch_barrier_async(dispatch_queue_t queue, ^{
+    //do something
+});
+dispatch_barrier_sync(dispatch_queue_t queue, ^{
+    //do something
+});
+</code></pre><p>当<code>dispatch_barrier_(a)sync</code>将任务加入队列后如存在已有任务，那么会等到已有任务完成后再执行该任务，并且会阻塞在此<code>block</code>后加入的任务，直至该任务完成。</p>
+<p>需要注意的是<code>dispatch_barrier_(a)sync</code>只有在自己创建的并发队列上有以上提及的效果，在串行队列及全局并发队列上效果等同于<code>dispatch_(a)sync</code>。</p>
+<pre><code>   dispatch_group_t group = dispatch_group_create();
+dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+
+dispatch_group_async(group,globalQueue, ^{
+    //do something
+});
+
+dispatch_group_async(group,globalQueue, ^{
+   //do something
+});
+
+dispatch_group_notify(group,globalQueue, ^{
+    //do something
+});
+</code></pre><p>用以实现任务的分组执行，加入<code>group</code>的任务都完成后，才会执行<code>dispatch_group_notify()</code>添加的任务。</p>
+<p>另外当你无法使用队列变量时，可以使用：</p>
+<pre><code>dispatch_group_enter(dispatch_group_t group);
+dispatch_group_leave(dispatch_group_t group);
+</code></pre><p>将需要加入<code>group</code>的任务打包起来。</p>
+<p><code>dispatch_group_notify()</code>中添加的就是结束任务。当然也可以添加等待任务：</p>
+<pre><code>dispatch_group_wait(dispatch_group_t group, dispatch_time_t timeout);
+</code></pre><p>该等待任务会在规定的时间内同步等待，直至<code>group</code>中的任务全部完成，或者超过规定时间才返回。</p>
+<pre><code>dispatch_set_context(dispatch_object_t object, void *context);
+dispatch_get_context(dispatch_object_t object);
+</code></pre><p><code>dispatch_set_context</code>可以为队列添加上下文数据，<code>context</code>的参数类型是<code>void *</code>，即可以指向所有的C类型。由于不是对象类型所以会牵扯到释放的问题，可以使用：</p>
+<pre><code>dispatch_set_finalizer_f(dispatch_object_t object, dispatch_function_t finalizer);
+</code></pre><p>设置”析构函数”，在队列完成后进行资源释放。具体用法可以参考这篇博客：</p>
+<p><a href="http://tutuge.me/2015/03/29/bind-data-to-gcd-queue/" target="_blank" rel="external">为GCD绑定NSObject类型上下文数据－利用_bridge_retained(transfer)转移内存管理权</a></p>
+<h3 id="u7EBF_u7A0B_u540C_u6B65"><a href="#u7EBF_u7A0B_u540C_u6B65" class="headerlink" title="线程同步"></a>线程同步</h3><p>多线程就会带来资源抢夺的问题，所以需要加锁机制，即当某一线程进入被抢夺资源后该资源被加锁其他线程不能进入，直至解锁。有两种常用的办法， <code>NSLock</code>和<code>@synchronized</code> 代码块。</p>
+<pre><code>[_lock lock];
+//被抢夺资源
+[_lock unlock];
+
+@synchronized{
+
+    //被抢夺资源
+
+}
+</code></pre><p>GCD也提供了一种信号量机制用以解决资源抢夺问题，信号量是<code>dispatch_semaphore_t</code>，每当发出一个信号通知<code>signal</code>，信号量 加1，每发送一个等待信号<code>wait</code>信号量减1,信号量大于0时，信号才能执行否则处于等待状态。相关方法如下：</p>
+<pre><code>dispatch_semaphore_t sema = dispatch_semaphore_creat(1);//括号内的为信号量初始值
+dispatch_semaphore_wait(sema,DISPATCH_TIME_FOREVER);//括号内的第二个参数为等待时间
+dispatch_semaphore_signal(sema);
+</code></pre><p><code>NSCondition</code>用来控制线程通讯，它本身也实现了<code>NSLocking</code>协议，可以使用<code>lock</code>和<code>unlock</code>方法。也可以使用<code>wait</code>控制使某个线程处于等待状态，知道其他线程调用<code>signal</code>方法，<code>signal</code>会唤醒一个线程，若存在多个线程处于等待状态则随机唤醒一个。<code>broadcast</code>会唤醒所有处于等待的线程。</p>
+<h3 id="u6F14_u793A_u4EE3_u7801"><a href="#u6F14_u793A_u4EE3_u7801" class="headerlink" title="演示代码"></a>演示代码</h3><h4 id="u4E32_u884C_u961F_u5217_u540C_u6B65_u52A0_u8F7D_u548C_u5F02_u6B65_u52A0_u8F7D"><a href="#u4E32_u884C_u961F_u5217_u540C_u6B65_u52A0_u8F7D_u548C_u5F02_u6B65_u52A0_u8F7D" class="headerlink" title="串行队列同步加载和异步加载"></a>串行队列同步加载和异步加载</h4><p>这里采用图片加载来进行演示：</p>
+<pre><code>- (void)loadImage{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t serialQueue = dispatch_queue_create(&quot;rust_33SerialQueue&quot;, DISPATCH_QUEUE_SERIAL);
+
+    for (int i=0;i&lt;row*column;i++) {
+
+        /* dispatch_sync(serialQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        }); */
+
+        dispatch_async(serialQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        }); 
+
+    }
+
+}
+
+- (void)loadImageAtIndex:(NSInteger)index
+{
+    NSString *str = [imageURL objectAtIndex:index];
+
+    NSData *data = [NSData dataWithContentsOfURL:        [NSURL URLWithString:str]];
+    UIImage *image = [UIImage imageWithData:data];
+
+    [self updateImage:image atIndex:index];
+
+}
+
+- (void)updateImage:(UIImage *)image atIndex:    (NSInteger)index
+{
+    UIImageView *imageView = [imageViews     objectAtIndex:index];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        imageView.image = image;
+
+    });
+}
+</code></pre><p>串行同步加载的效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif07.gif" alt="serialImages"></p>
+<p>串行异步加载的效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif06.gif" alt="serialImages"></p>
+<p>12张图片依次加载，区别在于同步调用会在所有图片加载完成后才返回，异步调用则不会。</p>
+<h3 id="u5E76_u53D1_u5F02_u6B65_u8C03_u7528"><a href="#u5E76_u53D1_u5F02_u6B65_u8C03_u7528" class="headerlink" title="并发异步调用"></a>并发异步调用</h3><p>代码于上面的代码相似，<code>loadImage</code>方法不同。</p>
+<pre><code>- (void)loadImage{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t globalQueue =     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    for (int i=0;i&lt;row*column;i++) {
+
+        dispatch_async(globalQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        });
+
+    }
+
+}
+</code></pre><p>效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif01.gif" alt="loadImageInConcerrent"></p>
+<h4 id="u4EFB_u52A1_u6267_u884C_u4E2D_u7684_u987A_u5E8F_u63A7_u5236"><a href="#u4EFB_u52A1_u6267_u884C_u4E2D_u7684_u987A_u5E8F_u63A7_u5236" class="headerlink" title="任务执行中的顺序控制"></a>任务执行中的顺序控制</h4><p>利用<code>dispatch_barrier_async</code>可以控制执行顺序。该方法创建的任务会先查看队列中有无任务要执行，如果有则会等待任务执行完毕后再执行，同时再此方法后创建的任务都不洗等待该任务完成后才能得以执行。下面演示一下该效果，与上面的代码不同的部分是加载方法。</p>
+<pre><code>- (void)loadImage {
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t globalQueue = dispatch_queue_create(&quot;rustblogs&quot;, DISPATCH_QUEUE_CONCURRENT);
+    dispatch_barrier_async(globalQueue, ^{
+
+        [self loadImageAtIndex:11];
+    });
+
+    for (int i=0;i&lt;row*column-1;i++) {
+
+        dispatch_async(globalQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        });
+    }
+
+}
+</code></pre><p>在代码中我们规定先加载最后一张图片再加载前十一张。效果如图：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif08.gif" alt="loadImageWithControl"></p>
+<h4 id="u4EFB_u52A1_u7684_u5206_u7EC4_u7BA1_u7406"><a href="#u4EFB_u52A1_u7684_u5206_u7EC4_u7BA1_u7406" class="headerlink" title="任务的分组管理"></a>任务的分组管理</h4><pre><code>- (void)loadImage
+{
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+    dispatch_group_async(group,globalQueue, ^{
+
+        for (int i=0; i&lt;6; i++) {
+            [self loadImageAtIndex:i];
+        }
+
+    });
+
+    dispatch_group_async(group,globalQueue, ^{
+        for (int i=3; i&lt;9; i++) {
+            [self loadImageAtIndex:i];
+        }
+    });
+
+    dispatch_group_notify(group,globalQueue, ^{
+
+        for (int i=9; i&lt;12; i++) {
+            [self loadImageAtIndex:i];
+        }
+    });
+}
+</code></pre><p>代码中我门将12张图片的加载分成3个部分第一次加载6张图片，第二次加载3张图片，将两次任务放入<code>group</code>中,<code>group</code>中的任务完成后再加载最后3张图片。效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif09.gif" alt="loadImageWithControl"></p>
+<h4 id="NSCondition_u7684_u4F7F_u7528"><a href="#NSCondition_u7684_u4F7F_u7528" class="headerlink" title="NSCondition的使用"></a>NSCondition的使用</h4><pre><code>- (void)loadImage
+{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    for (int i=0; i&lt;15; i++) {
+
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+
+            [self getData];
+
+        });
+
+    }
+
+}
+
+- (void)getData
+{
+    [condition lock];
+
+    [condition wait];
+    count++;
+    [condition unlock];
+
+    if (imageURL.count&gt;0) {
+        [self loadImageAtIndex:count];
+    }
+
+}
+
+- (void)loadImageAtIndex:(NSInteger)index
+{
+
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[imageURL lastObject]]]];
+    UIImageView *imageView = [imageViews objectAtIndex:index];
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+            imageView.image = image;
+
+    });
+    [imageURL removeLastObject];
+
+}
+
+- (void)creatImage
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [condition signal];
+    });
+}
+</code></pre><p><code>loadImage</code>创建15个线程执行<code>getData</code>,于<code>NSLock</code>不同的是当进入锁中的线程处于 <code>wait</code>状态时其他线程是可以进入锁中的。<code>creatImage</code>会发出<code>signal</code>信号。随机唤醒一个线程进行图片加载和UI更新。效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif11.gif" alt="loadImageWithControl"></p>
+<h3 id="u7ED3_u8BED"><a href="#u7ED3_u8BED" class="headerlink" title="结语"></a>结语</h3><p>本片博客就是以上内容，详细代码在<a href="https://github.com/jiliangzhai/RUSTGCDDemo" target="_blank" rel="external">DEMO</a>中，有兴趣的同学可以下载看一下，最后推荐两个博客。本篇内容很多也是参考这两篇博客。</p>
+<p><a href="http://www.cnblogs.com/kenshincui/p/3983982.html#GCD" target="_blank" rel="external">iOS开发系列–并行开发其实很容易</a></p>
+<p><a href="http://tutuge.me/2015/04/03/something-about-gcd/" target="_blank" rel="external">GCD使用经验与技巧浅谈</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[用户在使用程序时期望最小的等待时间，多线程技术有利于充分发挥处理器性能，提高运行效率并能解决线程阻塞的问题。常用的多线程开发有三种方式：NSTread NSOperation GCD。在这篇博客中我们学习的是GCD,这也是目前比较推荐的方式。]]>
+    
+    </summary>
+    
+      <category term="ios GCD" scheme="http://rustblogs.com/tags/ios-GCD/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[第一篇博客]]></title>

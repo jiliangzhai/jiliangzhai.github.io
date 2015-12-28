@@ -1,0 +1,978 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ios GCD," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="生锈的车轮" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="用户在使用程序时期望最小的等待时间，多线程技术有利于充分发挥处理器性能，提高运行效率并能解决线程阻塞的问题。常用的多线程开发有三种方式：NSTread NSOperation GCD。在这篇博客中我们学习的是GCD,这也是目前比较推荐的方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ios开发－GCD实现多线程开发">
+<meta property="og:url" content="http://rustblogs.com/2015/12/26/gdc/index.html">
+<meta property="og:site_name" content="生锈的车轮">
+<meta property="og:description" content="用户在使用程序时期望最小的等待时间，多线程技术有利于充分发挥处理器性能，提高运行效率并能解决线程阻塞的问题。常用的多线程开发有三种方式：NSTread NSOperation GCD。在这篇博客中我们学习的是GCD,这也是目前比较推荐的方式。">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif07.gif">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif06.gif">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif01.gif">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif08.gif">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif09.gif">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif11.gif">
+<meta property="og:updated_time" content="2015-12-28T14:39:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ios开发－GCD实现多线程开发">
+<meta name="twitter:description" content="用户在使用程序时期望最小的等待时间，多线程技术有利于充分发挥处理器性能，提高运行效率并能解决线程阻塞的问题。常用的多线程开发有三种方式：NSTread NSOperation GCD。在这篇博客中我们学习的是GCD,这也是目前比较推荐的方式。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide',
+    motion: true
+  };
+</script>
+
+  <title> ios开发－GCD实现多线程开发 | 生锈的车轮 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">生锈的车轮</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ios开发－GCD实现多线程开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-12-26T11:07:00+08:00" content="2015-12-26">
+              2015-12-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/26/gdc/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/26/gdc/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5"><a href="#GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5" class="headerlink" title="GCD基础及常用方法"></a>GCD基础及常用方法</h2><p>GCD(Grand Center Dispatch)是c语言开发的一套多线程机制。GCD是一种与块紧密相连的技术，开发者只需要将快排入队列中，GCD会负责处理所有的调度事宜。</p>
+<h3 id="GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5"><a href="#GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5" class="headerlink" title="GCD中的一些概念"></a>GCD中的一些概念</h3><p><strong>串行(serial)</strong>与<strong>并行(concurrent)</strong></p>
+<p> 这两个概念是相关任务能否同时执行的问题，串行执行就是每次只执行一个任务，除被执行的任务外，其余任务处于等待状态，执行的顺序就是任务加入队列的顺序。并行执行可以同时执行多个任务。</p>
+<p><strong>同步(synchronous)</strong>与<strong>异步(asynchronous)</strong></p>
+<p>这两个概念是有关某一任务完成是否可以立即返回的问题。同步执行需要队列中的所有预定任务都完成后才能返回，并行则不需要某一任务完成后即可返回。</p>
+<p><strong>并发</strong>于<strong>并行</strong></p>
+<p>并发与并行的区别主要在于是否真正同时执行两个程序，并行是这样的，并发往往是在不同程序间切换，以同时执行多个程序。</p>
+<p><strong>主队列</strong></p>
+<p>GCD有一个特殊队列就是主队列，用以执行主线程中的任务，UI的更新都应该放到主线程中去执行。</p>
+<h3 id="u521B_u5EFA_u961F_u5217"><a href="#u521B_u5EFA_u961F_u5217" class="headerlink" title="创建队列"></a>创建队列</h3><p>创建串行队列的方法如下：</p>
+<pre><code>dispatch_queue_t serialQueue =     dispatch_queue_creat(&quot;queueName&quot;,DISPATCH_QUEUE_SERIAL);
+</code></pre><p>创建并发队列方法有两种：</p>
+<pre><code>dispatch_queue_t serialQueue =     dispatch_queue_creat(&quot;queueName&quot;,DISPATCH_QUEUE_CONCURRENT);
+</code></pre><p>或者使用系统提供的全局并发队列：</p>
+<pre><code>dispatch_queue_t globlaQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+</code></pre><h3 id="u8C03_u7528_u65B9_u6CD5"><a href="#u8C03_u7528_u65B9_u6CD5" class="headerlink" title="调用方法"></a>调用方法</h3><p>基本调用方法有两种，同步调用和异步调用，区别已经讲过，调用方法如下：</p>
+<pre><code>dispatch_async(serialQueue,^{
+    //do something
+});//异步调用
+
+dispatch_sync(serisalQueue,^{
+    //do something
+});//同步调用
+</code></pre><p>在主线程中使用同步方法提交<code>block</code>，会导致死锁。</p>
+<p>其他调用方法:</p>
+<pre><code>static dispatch_once_t once;
+dispatch_once(&amp;once,^{
+    //do something
+});
+</code></pre><p>只执行1次，重复调用也不会重复执行，常用于单例模式。</p>
+<pre><code> dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*numOfSeconds);
+dispatch_after(time, queue, ^{
+    //do something
+});
+</code></pre><p>将任务延迟加入队列，达到延迟执行的效果。</p>
+<pre><code>dispatch_suspend(queue);
+</code></pre><p>挂起队列，挂起时如有<code>block</code>正在执行，会等<code>block</code>执行后暂停后续的<code>block</code>的执行。</p>
+<pre><code>dispatch_resume(queue);
+</code></pre><p>恢复任务的执行。</p>
+<pre><code>dispatch_apply(size_t iterations, dispatch_queue_t queue, ^(size_t) {
+    //do something
+});
+</code></pre><p>循环执行<code>block</code>，三个参数分别为：循环的次数 队列 要执行的<code>block</code>。只有当循环完成后才回返回，因此会阻塞线程。另要避免<code>dispatch_apply</code>的嵌套使用，会导致死锁。</p>
+<pre><code>dispatch_barrier_async(dispatch_queue_t queue, ^{
+    //do something
+});
+dispatch_barrier_sync(dispatch_queue_t queue, ^{
+    //do something
+});
+</code></pre><p>当<code>dispatch_barrier_(a)sync</code>将任务加入队列后如存在已有任务，那么会等到已有任务完成后再执行该任务，并且会阻塞在此<code>block</code>后加入的任务，直至该任务完成。</p>
+<p>需要注意的是<code>dispatch_barrier_(a)sync</code>只有在自己创建的并发队列上有以上提及的效果，在串行队列及全局并发队列上效果等同于<code>dispatch_(a)sync</code>。</p>
+<pre><code>   dispatch_group_t group = dispatch_group_create();
+dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+
+dispatch_group_async(group,globalQueue, ^{
+    //do something
+});
+
+dispatch_group_async(group,globalQueue, ^{
+   //do something
+});
+
+dispatch_group_notify(group,globalQueue, ^{
+    //do something
+});
+</code></pre><p>用以实现任务的分组执行，加入<code>group</code>的任务都完成后，才会执行<code>dispatch_group_notify()</code>添加的任务。</p>
+<p>另外当你无法使用队列变量时，可以使用：</p>
+<pre><code>dispatch_group_enter(dispatch_group_t group);
+dispatch_group_leave(dispatch_group_t group);
+</code></pre><p>将需要加入<code>group</code>的任务打包起来。</p>
+<p><code>dispatch_group_notify()</code>中添加的就是结束任务。当然也可以添加等待任务：</p>
+<pre><code>dispatch_group_wait(dispatch_group_t group, dispatch_time_t timeout);
+</code></pre><p>该等待任务会在规定的时间内同步等待，直至<code>group</code>中的任务全部完成，或者超过规定时间才返回。</p>
+<pre><code>dispatch_set_context(dispatch_object_t object, void *context);
+dispatch_get_context(dispatch_object_t object);
+</code></pre><p><code>dispatch_set_context</code>可以为队列添加上下文数据，<code>context</code>的参数类型是<code>void *</code>，即可以指向所有的C类型。由于不是对象类型所以会牵扯到释放的问题，可以使用：</p>
+<pre><code>dispatch_set_finalizer_f(dispatch_object_t object, dispatch_function_t finalizer);
+</code></pre><p>设置”析构函数”，在队列完成后进行资源释放。具体用法可以参考这篇博客：</p>
+<p><a href="http://tutuge.me/2015/03/29/bind-data-to-gcd-queue/" target="_blank" rel="external">为GCD绑定NSObject类型上下文数据－利用_bridge_retained(transfer)转移内存管理权</a></p>
+<h3 id="u7EBF_u7A0B_u540C_u6B65"><a href="#u7EBF_u7A0B_u540C_u6B65" class="headerlink" title="线程同步"></a>线程同步</h3><p>多线程就会带来资源抢夺的问题，所以需要加锁机制，即当某一线程进入被抢夺资源后该资源被加锁其他线程不能进入，直至解锁。有两种常用的办法， <code>NSLock</code>和<code>@synchronized</code> 代码块。</p>
+<pre><code>[_lock lock];
+//被抢夺资源
+[_lock unlock];
+
+@synchronized{
+
+    //被抢夺资源
+
+}
+</code></pre><p>GCD也提供了一种信号量机制用以解决资源抢夺问题，信号量是<code>dispatch_semaphore_t</code>，每当发出一个信号通知<code>signal</code>，信号量 加1，每发送一个等待信号<code>wait</code>信号量减1,信号量大于0时，信号才能执行否则处于等待状态。相关方法如下：</p>
+<pre><code>dispatch_semaphore_t sema = dispatch_semaphore_creat(1);//括号内的为信号量初始值
+dispatch_semaphore_wait(sema,DISPATCH_TIME_FOREVER);//括号内的第二个参数为等待时间
+dispatch_semaphore_signal(sema);
+</code></pre><p><code>NSCondition</code>用来控制线程通讯，它本身也实现了<code>NSLocking</code>协议，可以使用<code>lock</code>和<code>unlock</code>方法。也可以使用<code>wait</code>控制使某个线程处于等待状态，知道其他线程调用<code>signal</code>方法，<code>signal</code>会唤醒一个线程，若存在多个线程处于等待状态则随机唤醒一个。<code>broadcast</code>会唤醒所有处于等待的线程。</p>
+<h3 id="u6F14_u793A_u4EE3_u7801"><a href="#u6F14_u793A_u4EE3_u7801" class="headerlink" title="演示代码"></a>演示代码</h3><h4 id="u4E32_u884C_u961F_u5217_u540C_u6B65_u52A0_u8F7D_u548C_u5F02_u6B65_u52A0_u8F7D"><a href="#u4E32_u884C_u961F_u5217_u540C_u6B65_u52A0_u8F7D_u548C_u5F02_u6B65_u52A0_u8F7D" class="headerlink" title="串行队列同步加载和异步加载"></a>串行队列同步加载和异步加载</h4><p>这里采用图片加载来进行演示：</p>
+<pre><code>- (void)loadImage{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t serialQueue = dispatch_queue_create(&quot;rust_33SerialQueue&quot;, DISPATCH_QUEUE_SERIAL);
+
+    for (int i=0;i&lt;row*column;i++) {
+
+        /* dispatch_sync(serialQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        }); */
+
+        dispatch_async(serialQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        }); 
+
+    }
+
+}
+
+- (void)loadImageAtIndex:(NSInteger)index
+{
+    NSString *str = [imageURL objectAtIndex:index];
+
+    NSData *data = [NSData dataWithContentsOfURL:        [NSURL URLWithString:str]];
+    UIImage *image = [UIImage imageWithData:data];
+
+    [self updateImage:image atIndex:index];
+
+}
+
+- (void)updateImage:(UIImage *)image atIndex:    (NSInteger)index
+{
+    UIImageView *imageView = [imageViews     objectAtIndex:index];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        imageView.image = image;
+
+    });
+}
+</code></pre><p>串行同步加载的效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif07.gif" alt="serialImages"></p>
+<p>串行异步加载的效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif06.gif" alt="serialImages"></p>
+<p>12张图片依次加载，区别在于同步调用会在所有图片加载完成后才返回，异步调用则不会。</p>
+<h3 id="u5E76_u53D1_u5F02_u6B65_u8C03_u7528"><a href="#u5E76_u53D1_u5F02_u6B65_u8C03_u7528" class="headerlink" title="并发异步调用"></a>并发异步调用</h3><p>代码于上面的代码相似，<code>loadImage</code>方法不同。</p>
+<pre><code>- (void)loadImage{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t globalQueue =     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    for (int i=0;i&lt;row*column;i++) {
+
+        dispatch_async(globalQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        });
+
+    }
+
+}
+</code></pre><p>效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif01.gif" alt="loadImageInConcerrent"></p>
+<h4 id="u4EFB_u52A1_u6267_u884C_u4E2D_u7684_u987A_u5E8F_u63A7_u5236"><a href="#u4EFB_u52A1_u6267_u884C_u4E2D_u7684_u987A_u5E8F_u63A7_u5236" class="headerlink" title="任务执行中的顺序控制"></a>任务执行中的顺序控制</h4><p>利用<code>dispatch_barrier_async</code>可以控制执行顺序。该方法创建的任务会先查看队列中有无任务要执行，如果有则会等待任务执行完毕后再执行，同时再此方法后创建的任务都不洗等待该任务完成后才能得以执行。下面演示一下该效果，与上面的代码不同的部分是加载方法。</p>
+<pre><code>- (void)loadImage {
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_queue_t globalQueue = dispatch_queue_create(&quot;rustblogs&quot;, DISPATCH_QUEUE_CONCURRENT);
+    dispatch_barrier_async(globalQueue, ^{
+
+        [self loadImageAtIndex:11];
+    });
+
+    for (int i=0;i&lt;row*column-1;i++) {
+
+        dispatch_async(globalQueue, ^{
+
+            [self loadImageAtIndex:i];
+
+        });
+    }
+
+}
+</code></pre><p>在代码中我们规定先加载最后一张图片再加载前十一张。效果如图：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif08.gif" alt="loadImageWithControl"></p>
+<h4 id="u4EFB_u52A1_u7684_u5206_u7EC4_u7BA1_u7406"><a href="#u4EFB_u52A1_u7684_u5206_u7EC4_u7BA1_u7406" class="headerlink" title="任务的分组管理"></a>任务的分组管理</h4><pre><code>- (void)loadImage
+{
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);
+    dispatch_group_async(group,globalQueue, ^{
+
+        for (int i=0; i&lt;6; i++) {
+            [self loadImageAtIndex:i];
+        }
+
+    });
+
+    dispatch_group_async(group,globalQueue, ^{
+        for (int i=3; i&lt;9; i++) {
+            [self loadImageAtIndex:i];
+        }
+    });
+
+    dispatch_group_notify(group,globalQueue, ^{
+
+        for (int i=9; i&lt;12; i++) {
+            [self loadImageAtIndex:i];
+        }
+    });
+}
+</code></pre><p>代码中我门将12张图片的加载分成3个部分第一次加载6张图片，第二次加载3张图片，将两次任务放入<code>group</code>中,<code>group</code>中的任务完成后再加载最后3张图片。效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif09.gif" alt="loadImageWithControl"></p>
+<h4 id="NSCondition_u7684_u4F7F_u7528"><a href="#NSCondition_u7684_u4F7F_u7528" class="headerlink" title="NSCondition的使用"></a>NSCondition的使用</h4><pre><code>- (void)loadImage
+{
+
+    for (int i=0; i&lt;row*column; i++) {
+
+        NSString *urlStr = [NSString stringWithFormat:@&quot;http://7xpi4l.com1.z0.glb.clouddn.com/menghuan%i.jpg&quot;,i+1];
+        urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+        [imageURL addObject:urlStr];
+    }
+
+    for (int i=0; i&lt;15; i++) {
+
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+
+            [self getData];
+
+        });
+
+    }
+
+}
+
+- (void)getData
+{
+    [condition lock];
+
+    [condition wait];
+    count++;
+    [condition unlock];
+
+    if (imageURL.count&gt;0) {
+        [self loadImageAtIndex:count];
+    }
+
+}
+
+- (void)loadImageAtIndex:(NSInteger)index
+{
+
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[imageURL lastObject]]]];
+    UIImageView *imageView = [imageViews objectAtIndex:index];
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+            imageView.image = image;
+
+    });
+    [imageURL removeLastObject];
+
+}
+
+- (void)creatImage
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [condition signal];
+    });
+}
+</code></pre><p><code>loadImage</code>创建15个线程执行<code>getData</code>,于<code>NSLock</code>不同的是当进入锁中的线程处于 <code>wait</code>状态时其他线程是可以进入锁中的。<code>creatImage</code>会发出<code>signal</code>信号。随机唤醒一个线程进行图片加载和UI更新。效果如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/gcdgif11.gif" alt="loadImageWithControl"></p>
+<h3 id="u7ED3_u8BED"><a href="#u7ED3_u8BED" class="headerlink" title="结语"></a>结语</h3><p>本片博客就是以上内容，详细代码在<a href="https://github.com/jiliangzhai/RUSTGCDDemo" target="_blank" rel="external">DEMO</a>中，有兴趣的同学可以下载看一下，最后推荐两个博客。本篇内容很多也是参考这两篇博客。</p>
+<p><a href="http://www.cnblogs.com/kenshincui/p/3983982.html#GCD" target="_blank" rel="external">iOS开发系列–并行开发其实很容易</a></p>
+<p><a href="http://tutuge.me/2015/04/03/something-about-gcd/" target="_blank" rel="external">GCD使用经验与技巧浅谈</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios-GCD/" rel="tag">#ios GCD</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/21/friestblog/" rel="next" title="第一篇博客">
+                <i class="fa fa-chevron-left"></i> 第一篇博客
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/12/26/gdc/"
+           data-title="ios开发－GCD实现多线程开发" data-url="http://rustblogs.com/2015/12/26/gdc/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.png" alt="rust_33" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">rust_33</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/jiliangzhai" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/rustblogs" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD_u57FA_u7840_u53CA_u5E38_u7528_u65B9_u6CD5"><span class="nav-number">1.</span> <span class="nav-text">GCD基础及常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCD_u4E2D_u7684_u4E00_u4E9B_u6982_u5FF5"><span class="nav-number">1.1.</span> <span class="nav-text">GCD中的一些概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u521B_u5EFA_u961F_u5217"><span class="nav-number">1.2.</span> <span class="nav-text">创建队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8C03_u7528_u65B9_u6CD5"><span class="nav-number">1.3.</span> <span class="nav-text">调用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7EBF_u7A0B_u540C_u6B65"><span class="nav-number">1.4.</span> <span class="nav-text">线程同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6F14_u793A_u4EE3_u7801"><span class="nav-number">1.5.</span> <span class="nav-text">演示代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E32_u884C_u961F_u5217_u540C_u6B65_u52A0_u8F7D_u548C_u5F02_u6B65_u52A0_u8F7D"><span class="nav-number">1.5.1.</span> <span class="nav-text">串行队列同步加载和异步加载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5E76_u53D1_u5F02_u6B65_u8C03_u7528"><span class="nav-number">1.6.</span> <span class="nav-text">并发异步调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4EFB_u52A1_u6267_u884C_u4E2D_u7684_u987A_u5E8F_u63A7_u5236"><span class="nav-number">1.6.1.</span> <span class="nav-text">任务执行中的顺序控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4EFB_u52A1_u7684_u5206_u7EC4_u7BA1_u7406"><span class="nav-number">1.6.2.</span> <span class="nav-text">任务的分组管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSCondition_u7684_u4F7F_u7528"><span class="nav-number">1.6.3.</span> <span class="nav-text">NSCondition的使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7ED3_u8BED"><span class="nav-number">1.7.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rust_33</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"rustblogscom"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
