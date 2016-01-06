@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo blog," />
+  <meta name="keywords" content="IOS Quartz2D," />
 
 
 
@@ -53,17 +53,19 @@
 
 
 
-<meta name="description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
+<meta name="description" content="Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一篇博客">
-<meta property="og:url" content="http://rustblogs.com/2015/12/21/friestblog/index.html">
+<meta property="og:title" content="Quartz 2D图形绘制基础">
+<meta property="og:url" content="http://rustblogs.com/2016/01/06/quartz2D/index.html">
 <meta property="og:site_name" content="生锈的车轮">
-<meta property="og:description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
-<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg">
-<meta property="og:updated_time" content="2015-12-23T11:30:01.000Z">
+<meta property="og:description" content="Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/jianbian.png">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/xingbian.png">
+<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/tianchong.png">
+<meta property="og:updated_time" content="2016-01-06T15:15:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一篇博客">
-<meta name="twitter:description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
+<meta name="twitter:title" content="Quartz 2D图形绘制基础">
+<meta name="twitter:description" content="Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。">
 
 
 
@@ -75,7 +77,7 @@
   };
 </script>
 
-  <title> 第一篇博客 | 生锈的车轮 </title>
+  <title> Quartz 2D图形绘制基础 | 生锈的车轮 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -197,7 +199,7 @@
             
             
               
-                第一篇博客
+                Quartz 2D图形绘制基础
               
             
           </h1>
@@ -206,8 +208,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-21T22:46:40+08:00" content="2015-12-21">
-              2015-12-21
+            <time itemprop="dateCreated" datetime="2016-01-06T20:30:33+08:00" content="2016-01-06">
+              2016-01-06
             </time>
           </span>
 
@@ -216,8 +218,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/IOS/" itemprop="url" rel="index">
+                    <span itemprop="name">IOS</span>
                   </a>
                 </span>
 
@@ -232,8 +234,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/12/21/friestblog/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/21/friestblog/" itemprop="commentsCount"></span>
+                <a href="/2016/01/06/quartz2D/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/06/quartz2D/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -252,23 +254,167 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><a href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2" class="headerlink" title="利用hexo搭建博客"></a>利用hexo搭建博客</h2><p>本博客是利用hexo+github+七牛做图床搭建的，并绑定了个人域名至guthub，使用的主题名是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>。</p>
-<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令：</p>
-<p><code>npm install -g hexo</code></p>
-<p><code>hexo init</code></p>
-<p>即可安装。</p>
-<p>hexo常用命令：</p>
-<p><code>hexo new &quot;postName&quot;</code> //新建文章</p>
-<p><code>hexo server</code> // 启用本地服务</p>
-<p><code>hexo clean</code> //清除缓存</p>
-<p><code>hexo g</code> //生成静态网页</p>
-<p><code>hexo d</code> //开始部署</p>
-<p>博客内容使用Markdown进行编写，推荐MOU编辑器。</p>
-<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><p>github账号很多人都会有，需要做的就是建立一个名为userName.github.io的仓库，然后在你的博客根目录的_config.yml中进行配置就OK啦。</p>
-<h3 id="u56FE_u5E8A"><a href="#u56FE_u5E8A" class="headerlink" title="图床"></a>图床</h3><p>我使用的是七牛云储存，大致过程为申请账号，建立空间，同步本地文件至空间，然后就可以使用外链了。<br>同步本地文件至空间使用的是qrsync同步工具，具体教程可以看这篇文章：<a href="http://www.douban.com/note/526859806/" target="_blank" rel="external">如何使用七牛云做为图床</a>。</p>
-<h3 id="u4E3B_u9898"><a href="#u4E3B_u9898" class="headerlink" title="主题"></a>主题</h3><p>本博客使用的是 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，比较简洁，作者写的配置信息很详细，有兴趣的同学可以看一下。</p>
-<h3 id="u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED"><a href="#u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED" class="headerlink" title="第一篇博客的结束语"></a>第一篇博客的结束语</h3><p>博客搭建的过程大概就是这些了，本人IOS开发菜鸟目前还在机械行业工作，博客以后的内容主要会以IOS开发为主，还会有学习相关知识的内容。希望自己加油。</p>
-<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg" alt="image"></p>
+        <span itemprop="articleBody"><h2 id="Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840"><a href="#Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840" class="headerlink" title="Quartz 2D图行绘制基础"></a>Quartz 2D图行绘制基础</h2><p>Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。<br> 在这篇博客中我们将涉及到的功能包括：</p>
+<ol>
+<li>基础图形的绘制</li>
+<li>渐变填充</li>
+<li>图形上下文的形变</li>
+<li>填充模式</li>
+<li>位图绘制</li>
+<li>PDF绘制</li>
+</ol>
+<h3 id="u57FA_u7840_u56FE_u5F62_u7ED8_u5236"><a href="#u57FA_u7840_u56FE_u5F62_u7ED8_u5236" class="headerlink" title="基础图形绘制"></a>基础图形绘制</h3><p>首先要介绍最简单的基础图形绘制，包括直线、曲线、矩形、圆形等。利用基础图形的绘制我们可以对绘图流程有所了解。<br>绘制过程大致可分为以下几个步骤：</p>
+<ol>
+<li>获取图形上下文</li>
+<li>构建路径</li>
+<li>加入路径至图形上下文</li>
+<li>设置图形上下文想干参数，包括颜色、线条、阴影等。</li>
+<li>进行绘制</li>
+</ol>
+<p>在UI控件的<code>drawRect</code>方法中我们可以通过<code>UIGraphicsGetCurrentContext()</code>方法获得当前的图形上下文，然后在该图形上下文中进行绘制。下面以最简单的线条绘制进行说明。</p>
+<pre><code>- (void)drawRect:(CGRect)rect
+{
+    //获得图形上下文
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //创建路径
+    CGMutablePathRef path = CGPathCreateMutable();
+    //线段的起始点
+    CGPathMoveToPoint(path, nil, 10, 124);
+    //线段终点
+    CGPathAddLineToPoint(path, nil, self.bounds.size.width-10,124);
+    //添加第二条线
+    CGPathAddLineToPoint(path, nil, self.bounds.size.width/2, 164);
+    //添加第三条线
+    CGPathAddLineToPoint(path, nil, 10, 124);
+    //将路径添加到上下文
+    CGContextAddPath(context, path);
+    //设置线的端点形状
+    CGContextSetLineCap(context, kCGLineCapButt);
+    //设置交点形状
+    CGContextSetLineJoin(context, kCGLineJoinRound);
+    //设置线条宽度
+    CGContextSetLineWidth(context, 3.0);
+    //设置线条颜色，在这里需要将UIColorz转化为CGColor
+    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+    //进行绘制，第二个参数可以选择填充、绘制边框或两者都绘制
+    CGContextDrawPath(context, kCGPathStroke);
+    //由于Quartz 2D 属于Core Graphics框架所以对创建的对象要自己给释放掉。带有creat copy字样创建的对象都需要我们自己释放。
+    CGPathRelease(path);
+}
+</code></pre><p>以上就是绘制图形的基本过程，需要注意的是对象的释放部分不要忘记。</p>
+<h3 id="u6E10_u53D8_u8272_u586B_u5145"><a href="#u6E10_u53D8_u8272_u586B_u5145" class="headerlink" title="渐变色填充"></a>渐变色填充</h3><p>渐变色的视线需要我们在填充区域的不同位置（以0-1的某个数值表示）进行颜色的设置，设置的颜色之间的区域系统会进行补充。大致过程如下：</p>
+<ol>
+<li>确定使用的颜色空间，比如RGB、CMYK或者Gray。</li>
+<li>确定填充区域某些位置的颜色。</li>
+<li>构建<code>CGContextGradientRef</code>。</li>
+<li>进行填充，按照填充的方向不同，有两种调用方式线性渐变和径向渐变。</li>
+</ol>
+<p>以RGB为例，一个颜色由4个数值决定{red,green,blue,alpha}。下面的代码演示了使用RGB颜色空间进行线性渐变和径向渐变。</p>
+<pre><code>- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    {
+        //储存当先图形上下文状态
+        CGContextSaveGState(context);
+        //裁减图形上下文
+        CGContextClipToRect(context, CGRectMake((rect.size.width-200)/2, 84, 200, 200));
+        //构建颜色空间，这里选择RGB
+        CGColorSpaceRef colorSpace =     CGColorSpaceCreateDeviceRGB();
+        //创建3个颜色
+        CGFloat component[12] = {191.0/255.0,21.0/255.0,133.0/255.0,1,218.0/255.0,112.0/255.0,214.0/255.0,1.0,216.0/255.0,191.0/255.0,216.0/255.0,1.0};
+        //3个颜色对应的填充区域的位置
+        CGFloat locations[3] = {0,0.3,1.0};
+        //创建CGGradientRef
+        CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, component, locations, 3);
+        //确定起始点和终点，选择进行线性渐变
+        //kCGGradientDrawsAfterEndLocation表征开始位置之前不进行填充，结束位置后继续填充
+        //kCGGradientDrawsBeforeStartLocation表征开始位置之前进行填充，结束位置后不进行填充
+        CGContextDrawLinearGradient(context, gradient, CGPointMake(0,0), CGPointMake(200,200), kCGGradientDrawsAfterEndLocation);
+        //恢复图形上下文状态
+        CGContextRestoreGState(context);
+        //对象释放
+        CGColorSpaceRelease(colorSpace);
+        CGGradientRelease(gradient);
+    }
+
+    {
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGFloat component[12] = {191.0/255.0,21.0/255.0,133.0/255.0,1,218.0/255.0,112.0/255.0,214.0/255.0,1.0,216.0/255.0,191.0/255.0,216.0/255.0,1.0};
+        CGFloat locations[3] = {0,0.3,1.0};
+        CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, component, locations, 3);
+        //确定起始起始半径，结束位置结束半径，选择进行径向填充。
+        CGContextDrawRadialGradient(context, gradient, CGPointMake(rect.size.width/2,404 ), 0, CGPointMake(rect.size.width/2, 404), 100, kCGGradientDrawsBeforeStartLocation);
+
+        CGColorSpaceRelease(colorSpace);
+        CGGradientRelease(gradient);
+    }
+
+}
+</code></pre><p>上面代码中的<code>CGContextSaveGState(context)``CGContextRestoreGState(context)</code>分别是储存和恢复图形上下文状态，由于在线性渐变中我对上下文进行了裁剪<code>CGContextClipToRect()</code>，而在径向渐变中不想上下文中只有被裁剪过的区域所以在裁剪前存储了图形上下文，在使用后又恢复来它。效果图如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/jianbian.png" alt="image"></p>
+<h3 id="u56FE_u5F62_u4E0A_u4E0B_u6587_u5F62_u53D8"><a href="#u56FE_u5F62_u4E0A_u4E0B_u6587_u5F62_u53D8" class="headerlink" title="图形上下文形变"></a>图形上下文形变</h3><p>图形上下文的形变包括，平移、放缩以及绕z轴的旋转，Quartz 2D的坐标原点在左下角，单UIKit对其进行了变换，统一在了屏幕左上角，所以下面的变换是基于左上角的原点的，这一点需要注意。另外在做图形上下文变换前最好进行图形上下文状态的储存，使用完后恢复状态，以便再次使用。下面以一个图像的绘制对图形上下文的变换进行说明，代码如下：</p>
+<pre><code>- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextSaveGState(context);
+//平移
+    CGContextTranslateCTM(context,90, 50);
+//缩小
+    CGContextScaleCTM(context, 0.8,0.8);
+//旋转
+    CGContextRotateCTM(context, M_PI_4/4);
+
+    UIImage *image = [UIImage imageNamed:@&quot;boy.jpg&quot;];
+//在上下文中绘制图像
+    [image drawInRect:CGRectMake(0, 74, 240, 180)];
+
+    CGContextRestoreGState(context);
+}    
+</code></pre><p>效果图如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/xingbian.png" alt="image"></p>
+<h3 id="u586B_u5145_u6A21_u5F0F"><a href="#u586B_u5145_u6A21_u5F0F" class="headerlink" title="填充模式"></a>填充模式</h3><p>我们可以自定义一种样式进行填充，类似于贴瓷砖，我们定义的样式就是瓷砖的样式。然后以全都一样的瓷砖去铺满要填充的区域。</p>
+<p>Quartz 2D支持两种填充模式，有颜色填充和无颜色填充。这里使用有颜色填充进行功能的演示。过程如下：</p>
+<ol>
+<li>创建一个填充的颜色空间</li>
+<li>构建自定义样式，即瓷砖的样式，创建时需要构建一个一个callback方法，在该方法中绘制自定义样式。</li>
+<li>使用CGPatternCreate方法创建一个填充模式</li>
+<li>设定图形上下文的填充模式</li>
+<li>绘制图形</li>
+</ol>
+<p>下面通过代码及效果图对填充模式进行说明。</p>
+<pre><code>- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //创建填充的颜色空间
+    CGColorSpaceRef colorSpace = CGColorSpaceCreatePattern(NULL);
+    CGContextSetFillColorSpace(context, colorSpace);
+    //callback方法
+    CGPatternCallbacks callBack = {0,&amp;drawTile,NULL};
+    //根据callback方法创建自定义样式
+    CGPatternRef pattern = CGPatternCreate(NULL, CGRectMake(0, 0, 40, 40), CGAffineTransformIdentity, 40, 40, kCGPatternTilingNoDistortion, true, &amp;callBack);
+    CGFloat alpha = 1.0;
+    //设置图形上下文的填充样式
+    CGContextSetFillPattern(context, pattern, &amp;alpha);
+    //绘制图形
+    CGContextFillRect(context, rect);
+
+CGPatternRelease(pattern);
+CGColorSpaceRelease(colorSpace);
+}
+//callback方法，在该方法中绘制了自定义样式
+void drawTile(void *info,CGContextRef context)
+{
+    CGContextSetRGBFillColor(context, 235.0/255.0, 127.0/255.0, 175.0/255.0, 1.0);
+    CGContextFillRect(context, CGRectMake(0, 0, 20, 20));
+    CGContextFillRect(context, CGRectMake(20, 20, 40, 40));
+
+    CGContextSetRGBFillColor(context, 140.0/255.0, 179.0/255.0, 62.0/255.0, 1.0);
+    CGContextFillRect(context, CGRectMake(0, 20, 20, 20));
+    CGContextFillRect(context, CGRectMake(20, 0, 20, 20));
+}
+</code></pre><p>效果图如下：<br><img src="http://7xpcyy.com1.z0.glb.clouddn.com/tianchong.png" alt="image"></p>
 </span>
       
     </div>
@@ -277,7 +423,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo-blog/" rel="tag">#hexo blog</a>
+            <a href="/tags/IOS-Quartz2D/" rel="tag">#IOS Quartz2D</a>
           
         </div>
       
@@ -286,13 +432,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2015/12/26/gdc/" rel="next" title="ios开发－GCD实现多线程开发">
+                <i class="fa fa-chevron-left"></i> ios开发－GCD实现多线程开发
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/26/gdc/" rel="prev" title="ios开发－GCD实现多线程开发">
-                ios开发－GCD实现多线程开发 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -319,8 +465,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/12/21/friestblog/"
-           data-title="第一篇博客" data-url="http://rustblogs.com/2015/12/21/friestblog/">
+      <div class="ds-thread" data-thread-key="2016/01/06/quartz2D/"
+           data-title="Quartz 2D图形绘制基础" data-url="http://rustblogs.com/2016/01/06/quartz2D/">
       </div>
     
   </div>
@@ -435,7 +581,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><span class="nav-number">1.</span> <span class="nav-text">利用hexo搭建博客</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo"><span class="nav-number">1.1.</span> <span class="nav-text">hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#github"><span class="nav-number">1.2.</span> <span class="nav-text">github</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u5E8A"><span class="nav-number">1.3.</span> <span class="nav-text">图床</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E3B_u9898"><span class="nav-number">1.4.</span> <span class="nav-text">主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED"><span class="nav-number">1.5.</span> <span class="nav-text">第一篇博客的结束语</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840"><span class="nav-number">1.</span> <span class="nav-text">Quartz 2D图行绘制基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u57FA_u7840_u56FE_u5F62_u7ED8_u5236"><span class="nav-number">1.1.</span> <span class="nav-text">基础图形绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6E10_u53D8_u8272_u586B_u5145"><span class="nav-number">1.2.</span> <span class="nav-text">渐变色填充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u5F62_u4E0A_u4E0B_u6587_u5F62_u53D8"><span class="nav-number">1.3.</span> <span class="nav-text">图形上下文形变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u586B_u5145_u6A21_u5F0F"><span class="nav-number">1.4.</span> <span class="nav-text">填充模式</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
