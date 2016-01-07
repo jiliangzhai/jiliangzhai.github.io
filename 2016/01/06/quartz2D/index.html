@@ -64,7 +64,7 @@
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/tianchong1.png">
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/weitu.png">
 <meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/pdf.png">
-<meta property="og:updated_time" content="2016-01-07T12:34:39.000Z">
+<meta property="og:updated_time" content="2016-01-07T12:43:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quartz 2D图形绘制基础">
 <meta name="twitter:description" content="Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。">
@@ -256,7 +256,7 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840"><a href="#Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840" class="headerlink" title="Quartz 2D图行绘制基础"></a>Quartz 2D图行绘制基础</h2><p>Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。<br> 在这篇博客中我们将涉及到的功能包括：</p>
+        <span itemprop="articleBody"><h2 id="Quartz_2D_u56FE_u5F62_u7ED8_u5236_u57FA_u7840"><a href="#Quartz_2D_u56FE_u5F62_u7ED8_u5236_u57FA_u7840" class="headerlink" title="Quartz 2D图形绘制基础"></a>Quartz 2D图形绘制基础</h2><p>Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图形的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。<br>在这篇博客中我们将涉及到的功能包括：</p>
 <ol>
 <li>基础图形的绘制</li>
 <li>渐变填充</li>
@@ -661,7 +661,7 @@ webview loadRequest:request];
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840"><span class="nav-number">1.</span> <span class="nav-text">Quartz 2D图行绘制基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u57FA_u7840_u56FE_u5F62_u7ED8_u5236"><span class="nav-number">1.1.</span> <span class="nav-text">基础图形绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6E10_u53D8_u8272_u586B_u5145"><span class="nav-number">1.2.</span> <span class="nav-text">渐变色填充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u5F62_u4E0A_u4E0B_u6587_u5F62_u53D8"><span class="nav-number">1.3.</span> <span class="nav-text">图形上下文形变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u586B_u5145_u6A21_u5F0F"><span class="nav-number">1.4.</span> <span class="nav-text">填充模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F4D_u56FE_u7ED8_u5236"><span class="nav-number">1.5.</span> <span class="nav-text">位图绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PDF_u7ED8_u5236"><span class="nav-number">1.6.</span> <span class="nav-text">PDF绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quartz_2D_u56FE_u5F62_u7ED8_u5236_u57FA_u7840"><span class="nav-number">1.</span> <span class="nav-text">Quartz 2D图形绘制基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u57FA_u7840_u56FE_u5F62_u7ED8_u5236"><span class="nav-number">1.1.</span> <span class="nav-text">基础图形绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6E10_u53D8_u8272_u586B_u5145"><span class="nav-number">1.2.</span> <span class="nav-text">渐变色填充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u5F62_u4E0A_u4E0B_u6587_u5F62_u53D8"><span class="nav-number">1.3.</span> <span class="nav-text">图形上下文形变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u586B_u5145_u6A21_u5F0F"><span class="nav-number">1.4.</span> <span class="nav-text">填充模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F4D_u56FE_u7ED8_u5236"><span class="nav-number">1.5.</span> <span class="nav-text">位图绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PDF_u7ED8_u5236"><span class="nav-number">1.6.</span> <span class="nav-text">PDF绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
