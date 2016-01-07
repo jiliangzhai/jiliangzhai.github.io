@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2016-01-06T15:43:19.000Z</updated>
+  <updated>2016-01-07T12:15:12.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://rustblogs.com/2016/01/06/quartz2D/"/>
     <id>http://rustblogs.com/2016/01/06/quartz2D/</id>
     <published>2016-01-06T12:30:33.000Z</published>
-    <updated>2016-01-06T15:43:19.000Z</updated>
+    <updated>2016-01-07T12:15:12.000Z</updated>
     <content type="html"><![CDATA[<h2 id="Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840"><a href="#Quartz_2D_u56FE_u884C_u7ED8_u5236_u57FA_u7840" class="headerlink" title="Quartz 2D图行绘制基础"></a>Quartz 2D图行绘制基础</h2><p>Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。<br> 在这篇博客中我们将涉及到的功能包括：</p>
 <ol>
 <li>基础图形的绘制</li>
@@ -91,7 +91,7 @@
         CGFloat component[12] = {191.0/255.0,21.0/255.0,133.0/255.0,1,218.0/255.0,112.0/255.0,214.0/255.0,1.0,216.0/255.0,191.0/255.0,216.0/255.0,1.0};
         //3个颜色对应的填充区域的位置
         CGFloat locations[3] = {0,0.3,1.0};
-        //创建CGGradientRef
+        //创建CGGradientRef，三个参数分别为颜色空间、颜色、数量
         CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, component, locations, 3);
         //确定起始点和终点，选择进行线性渐变
         //kCGGradientDrawsAfterEndLocation表征开始位置之前不进行填充，结束位置后继续填充
@@ -158,10 +158,18 @@
     CGContextSetFillColorSpace(context, colorSpace);
     //callback方法
     CGPatternCallbacks callBack = {0,&amp;drawTile,NULL};
-    //根据callback方法创建自定义样式
+    //根据callback方法创建自定义样式，参数如下
+    info:传递给callback的参数
+    bounds:自定义样式也就是瓷砖的大小
+    matrix:形变
+    x:瓷砖之间x轴间距
+    y:瓷砖之间y轴艰巨
+    tiling:贴瓷砖的方法
+    isColored:瓷砖是否添加了yanse
+    callbacks:回调方法
     CGPatternRef pattern = CGPatternCreate(NULL, CGRectMake(0, 0, 40, 40), CGAffineTransformIdentity, 40, 40, kCGPatternTilingNoDistortion, true, &amp;callBack);
     CGFloat alpha = 1.0;
-    //设置图形上下文的填充样式
+    //设置图形上下文的填充样式，三个参数为上下文、样式、透明度
     CGContextSetFillPattern(context, pattern, &amp;alpha);
     //绘制图形
     CGContextFillRect(context, rect);
@@ -181,6 +189,71 @@ void drawTile(void *info,CGContextRef context)
     CGContextFillRect(context, CGRectMake(20, 0, 20, 20));
 }
 </code></pre><p>效果图如下：<br><img src="http://7xpcyy.com1.z0.glb.clouddn.com/tianchong.png" alt="image"></p>
+<h3 id="u4F4D_u56FE_u7ED8_u5236"><a href="#u4F4D_u56FE_u7ED8_u5236" class="headerlink" title="位图绘制"></a>位图绘制</h3><p>以上的方法中，我们是在<code>drawRect</code>中通过<code>UIGraphicsGetCurrentContext</code>方法获得的图形上下文，进行的绘制。我们也可以我们也可以在位图活着PDF的上下文中进行绘制。位图上下文和PDF上下文我们需要手动创建方法分别为：<code>UIGraphicsBeginImageContext()</code>和<code>UIGraphicsBeginPDFContextToFile()</code>，使用完后再关闭它。<code>drawRect</code>中的图形上下文是由系统创建的因此只能在该方法中使用，而位图上下文和PDF上下文时我们自己创建的因此可以在任何地方使用。获得刚上下文的方法是在创建上下文之后关闭上下文之前调用<code>UIGraphicsGetCurrentContext()</code>就可以获得我们自己创建的上下文。</p>
+<p>下面的代码中我们会创建一个位图上下文，并利用该上下文获得一个圆形的头像图片，以此来对位图绘制进行说明。</p>
+<pre><code>- (UIImage *)imageMaker
+{
+    CGSize size = CGSizeMake(200, 200);
+    //创建位图上下文
+    UIGraphicsBeginImageContext(size);
+    //创建路径
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 200, 200) cornerRadius:100];
+    //路径裁剪
+    [path addClip];
+
+    UIImage *image = [UIImage imageNamed:@&quot;boy.jpg&quot;];
+    CGSize imageSize = image.size;
+    //调整绘制区域
+    float ratioX = 200/imageSize.width;
+    float ratioY = 200/imageSize.height;
+    float ratio = MAX(ratioX, ratioY);
+
+    float originX = (200-ratio*imageSize.width)/2.0;
+    float originy = (200-ratio*imageSize.height)/2.0;
+    //图片绘制
+    [image drawInRect:CGRectMake(originX, originy, ratio*imageSize.width,ratio*imageSize.height)];
+    //获得图片
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    //关闭位图上下文
+    UIGraphicsEndImageContext();
+
+    return newImage;
+}
+</code></pre><p>效果图如下：<br><img src="http://7xpcyy.com1.z0.glb.clouddn.com/weitu.png" alt="image"></p>
+<h3 id="PDF_u7ED8_u5236"><a href="#PDF_u7ED8_u5236" class="headerlink" title="PDF绘制"></a>PDF绘制</h3><p>PDF绘制根位图绘制类似，首先要创建PDF图形上下文，不同的是绘制内容到 PDF需要创建分页，每页内容的开始都要调用一次<code>UIGraphicsBeginPDFPage()</code>方法。下面代码中演示了绘制文本及图片到PDF的过程。</p>
+<pre><code>- (NSString *)PDFmaker
+{
+    NSArray *direstories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[direstories lastObject] stringByAppendingPathComponent:@&quot;rustPDF.pdf&quot;];
+
+    UIGraphicsBeginPDFContextToFile(path, CGRectZero, [NSDictionary dictionaryWithObjectsAndKeys:@&quot;rust&quot;,kCGPDFContextAuthor, nil]);
+    UIGraphicsBeginPDFPage();
+
+    NSString *title = @&quot;This is a PDF&quot;;
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.alignment = NSTextAlignmentCenter;
+    [title drawInRect:CGRectMake(0, 30, 612, 50) withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSParagraphStyleAttributeName:style}];
+    NSString *content = @&quot;this hit,that ice cold,Michelle Pfeiffer,that white gold,this one,for them hood girl,them good girl,straight masterpieces.&quot;;
+    NSMutableParagraphStyle *style2 = [[NSMutableParagraphStyle alloc] init];
+    style2.alignment = NSTextAlignmentLeft;
+    [content drawInRect:CGRectMake(30, 100, 600, 100) withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor grayColor],NSParagraphStyleAttributeName:style2}];
+    UIImage *image = [UIImage imageNamed:@&quot;boy.jpg&quot;];
+    [image drawInRect:CGRectMake(120, 150, 397, 220)];
+
+    UIGraphicsEndPDFContext();
+
+    return path;
+}
+</code></pre><p>可以利用UIWebView可以将绘制的PDF展现过来。代码如下：</p>
+<pre><code>NSString* path = [self PDFmaker];
+UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, self.view.bounds.size.height-64)];
+[self.view addSubview:webview];
+
+NSURL *url = [NSURL URLWithString:path];
+NSURLRequest *request = [NSURLRequest requestWithURL:url];
+webview loadRequest:request];
+</code></pre><p>效果图如下：<br><img src="http://7xpcyy.com1.z0.glb.clouddn.com/pdf.png" alt="image"></p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>本篇博客中以几个效果的视线介绍里Quartz 2D的一些基础知识，若果想要更全面的了解这部分的内容推荐很好的一篇博客：</p>
 ]]></content>
     <summary type="html">
     <![CDATA[Quartz 2D是Core Graphic框架的一部分，可以用以进行2D图行的绘制。在这篇博客中以几个功能的实现介绍一下Quartz 2D的基础知识。]]>
