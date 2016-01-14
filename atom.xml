@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2016-01-07T12:43:36.000Z</updated>
+  <updated>2016-01-14T15:03:02.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -13,6 +13,331 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[CALayer and Core Animation]]></title>
+    <link href="http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/"/>
+    <id>http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/</id>
+    <published>2016-01-13T13:22:22.000Z</published>
+    <updated>2016-01-14T15:03:02.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="CAlayer_and_Core_Animation"><a href="#CAlayer_and_Core_Animation" class="headerlink" title="CAlayer and Core Animation"></a>CAlayer and Core Animation</h2><h3 id="CALayer_u7ED8_u5236"><a href="#CALayer_u7ED8_u5236" class="headerlink" title="CALayer绘制"></a>CALayer绘制</h3><p>CALayer的绘制主要设计两个方法<code>drawLayer: InContext:</code>和<code>drawInContext:</code>两个方法都提供了一个Context所以绘制方法类似于上一篇讲到的Quartz 2D的绘制方法，可以绘制基本图形，图片以及文字。另CALyer的很多属性都包含隐式动画效果，属性的改变会引发动画效果。</p>
+<p>下面这段代码演示的就是CALyer中的基本绘制方法遗迹隐式动画的效果。</p>
+<pre><code>- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    shadowLayer= [[CALayer alloc]init];
+    shadowLayer.bounds = CGRectMake(0, 0, 200, 200);;
+    shadowLayer.position = CGPointMake(self.view.frame.size.width/2, 200);
+    //设置好圆角，成为圆形
+    shadowLayer.cornerRadius = 100;
+    //阴影颜色
+    shadowLayer.shadowColor = [UIColor grayColor].CGColor;
+    shadowLayer.shadowOffset = CGSizeMake(2, 1);
+    //透明度
+    shadowLayer.shadowOpacity=1;
+    shadowLayer.borderColor = [UIColor whiteColor].CGColor;
+    shadowLayer.borderWidth = 2.0;
+    [self.view.layer addSublayer:shadowLayer];
+
+    layer = [[CALayer alloc] init];
+    layer.bounds = CGRectMake(0, 0, 200, 200);
+    layer.position = CGPointMake(self.view.frame.size.width/2, 200);
+    layer.backgroundColor = [UIColor purpleColor].CGColor;
+    layer.cornerRadius = 100;
+    layer.masksToBounds = YES;
+    layer.borderColor = [UIColor whiteColor].CGColor;
+    layer.borderWidth = 2.0;
+    //代理
+    layer.delegate = self;
+    //调用setNeedDisplay才能调用代理方法
+    [layer setNeedsDisplay];
+    [self.view.layer addSublayer:layer];
+    targetRect = layer.frame;//calayer有一个name属性可以用以区分layer
+}
+
+- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInView:self.view];
+
+    if (CGRectContainsPoint(targetRect, location)) {
+    //创建一个，点击图层，图层缩小的动画，这里就是隐式动画
+        [layer setValue:@0.6 forKeyPath:@&quot;transform.scale&quot;];
+        [shadowLayer setValue:@0.6 forKeyPath:@&quot;transform.scale&quot;];
+    }
+}
+
+- (void)touchesEnded:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInView:self.view];
+
+    if (CGRectContainsPoint(targetRect, location)) {
+    //点击结束后图层恢复大小，当然也有一个动画效果
+        [layer setValue:@1.0 forKeyPath:@&quot;transform.scale&quot;];
+        [shadowLayer setValue:@1.0 forKeyPath:@&quot;transform.scale&quot;];
+    }
+
+}
+//代理方法，在方法中进行绘制
+- (void)drawLayer:(CALayer *)myLayer inContext:(CGContextRef)ctx
+{
+    UIImage *image = [self thumbnailMakerWithImage:[UIImage imageNamed:@&quot;panda.jpg&quot;]];
+    //储存图层状态
+    CGContextSaveGState(ctx);
+    //图层形变，CALayer的transform是3D的所以只要绕y周旋转180度就可以是左上角坐标系了。
+    myLayer.transform = CATransform3DMakeRotation(M_PI, 1, 0, 0);
+    //绘制一张图片到图层,这里无法使用UKit封装过的方法
+    CGContextDrawImage(ctx, CGRectMake(CGRectGetWidth(myLayer.bounds)/2-image.size.width/2, CGRectGetHeight(myLayer.bounds)/2-image.size.height/2, image.size.width, image.size.height), image.CGImage);
+    //恢复图层状态
+    CGContextRestoreGState(ctx);
+}
+//这个方法，是制作缩略图的方法
+- (UIImage *)thumbnailMakerWithImage:(UIImage *)image
+{
+    if (!image) {
+        return nil;
+    }
+
+    CGSize imageSize = image.size;
+    float ratioX = 200/imageSize.width;
+    float ratioY = 200/imageSize.height;
+    float ratio = MAX(ratioX, ratioY);
+
+    float targetWidth = ratio*imageSize.width;
+    float targetHeight = ratio*imageSize.height;
+
+    float originX = (200-targetWidth)/2.0;
+    float originY = (200-targetHeight)/2.0;
+
+    UIGraphicsBeginImageContext(CGSizeMake(200, 200));
+    [image drawInRect:CGRectMake(originX, originY, targetWidth, targetHeight)];
+    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return thumbnail;
+}
+</code></pre><p>可以看一下具体效果：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/calayer.gif" alt="calyer"></p>
+<p>有几个点需注意：</p>
+<ol>
+<li>UIView的根图层没有隐式动画的效果</li>
+<li>以上代码时利用<code>drawLayer: InContext:</code>代理方法进行的绘制，我们也可以自定义图层的<code>drawInContext进行绘制</code>绘制的方法是相同的。</li>
+<li>需要调用<code>setNeedDisplay</code>才能调用以上两种方法进行绘制。</li>
+<li>CALalayer的<code>transform</code>属性是<code>CATransform3D</code>，包含x轴以及y轴的旋转，所以调整图层坐标系变得很简单，只需绕y轴180度就可以了，需要明确的是图层的形变是按照锚点属性进行的。</li>
+<li>图层的隐式动画我们无法很好的进行控制，所以有时候需要利用Core Animation或者UIView封装的动画。</li>
+<li><code>maskToBounds</code>和阴影效果无法同时存在，所以在上面的代码中专门创建了一个阴影图层。来承载阴影效果。</li>
+<li>CALayer有一个<code>name</code>属性可以让我们对图层进行区分。</li>
+<li>CALayer的<code>frame</code>属性不具有隐式动画效果，中心点是<code>position</code>不是<code>center</code>。</li>
+</ol>
+<h3 id="Core_Animation"><a href="#Core_Animation" class="headerlink" title="Core Animation"></a>Core Animation</h3><p>上面也说到了，隐式动画我们无法进行控制，所以有时候要使用Core Animation。动画基本分为以下几类：基本动画、关键帧动画、动画组、转场动画。下面我们逐一说明。</p>
+<h4 id="u57FA_u672C_u52A8_u753B"><a href="#u57FA_u672C_u52A8_u753B" class="headerlink" title="基本动画"></a>基本动画</h4><p>基本动画属于属性动画范畴，通过属性的修改引发动画效果，我们可以设定初始值以及终值，中间值由系统进行插值从而形成一段连续的动画效果。</p>
+<p>下面以代码来说明添加基本动画的过程，大致包括三个步骤：创建基本动画、动画属性设置、添加基本动画至图层。</p>
+<pre><code> //创建基本动画
+CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@&quot;transform.rotation.z&quot;];
+//动画时间
+rotate.duration = 1.0;
+//初始值，也可以不设置，那么默认为该属性的当前值为初始值
+rotate.fromValue = @0;
+//终值
+rotate.toValue = @(2*M_PI);
+//重复次数
+rotate.repeatCount = 0;
+//是否在动画完成后移除动画
+rotate.removedOnCompletion = NO;
+//添加动画至图层，根据key值可以对动画进行区分。
+[bubbleLayer addAnimation:rotate forKey:@&quot;rotation&quot;];
+</code></pre><p>上面是一段旋转动画的创建过程，也是基本动画创建的一般过程。需要注意的是，动画效果并不会在动画结束后将该属性值更改为<code>toValue</code>，而是恢复到动画开始前的的当前值。如果需要改变该属性值，需要我们手动去更改。更改方法下面会说到。</p>
+<h4 id="u5173_u952E_u5E27_u52A8_u753B"><a href="#u5173_u952E_u5E27_u52A8_u753B" class="headerlink" title="关键帧动画"></a>关键帧动画</h4><p>关键帧动画也属于属性动画，与基本动画不同的是我们可以进行更多的点的控制，而不是只有初始值和终值。创建过程与基本动画类似，下面代码演示这一过程。</p>
+<pre><code>//创建关键帧动画
+CAKeyframeAnimation* keyframeAnimation=[CAKeyframeAnimation animationWithKeyPath:@&quot;position&quot;];
+
+NSValue* value1=[NSValue valueWithCGPoint:layer.position];
+NSValue* value2=[NSValue valueWithCGPoint:CGPointMake(80, 220)];
+NSValue* value3=[NSValue valueWithCGPoint:CGPointMake(45, 300)];
+NSValue* value4=[NSValue valueWithCGPoint:CGPointMake(55, 400)];
+NSArray* values=@[value1,value2,value3,value4];
+//设置每帧的初始值也就是前一帧的终值
+keyframeAnimation.values=values;
+keyframeAnimation.duration=8.0;
+//设置开始时间，cacurrentmediatime()是现在的时间，可以实现延时效果
+keyframeAnimation.beginTime=CACurrentMediaTime()+2;
+//keyTimes可以控制每一帧的时间，用0-1的值进行表示。
+keyframeAnimation.keyTimes = @[@0.0,@0.25,@0.75,@1.0];
+//动画计算模式
+keyframeAnimation.calculationMode = kCAAnimationCubic;
+//添加动画至图层
+[layer addAnimation:keyframeAnimation forKey:@&quot;keyframeAnimation1&quot;];
+</code></pre><p>对于关键帧动画我们还可以通过绘制路径进行动画控制，代码如下；</p>
+<pre><code>CAKeyframeAnimation* keyframeAnimation=[CAKeyframeAnimation animationWithKeyPath:@&quot;position&quot;];
+
+CGMutablePathRef path=CGPathCreateMutable();
+CGPathMoveToPoint(path, nil, layer.position.x, layer.position.y);
+CGPathAddCurveToPoint(path, nil, 160, 280, -30, 300, 55, 400);
+
+keyframeAnimation.path=path;
+keyframeAnimation.duration=8.0;
+keyframeAnimation.beginTime=CACurrentMediaTime()+2;
+
+[layer addAnimation:keyframeAnimation forKey:@&quot;keyframeAnimation2&quot;];
+</code></pre><p> 上面的代码中的路径是贝塞尔曲线，当然我么也可以绘制其他曲线。</p>
+<h4 id="u52A8_u753B_u7EC4"><a href="#u52A8_u753B_u7EC4" class="headerlink" title="动画组"></a>动画组</h4><p>动画效果通常是多种运动的叠加效果，上面说到的基本动画和关键帧动画每次只能对一个属性进行动画控制，我们可以用动画组来解决这个问题。动画组中的动画都受控于动画组，而且放到动画组中的动画可以并发执行，以此可以实现更加复杂的动画效果。</p>
+<p>动画组的使用分以下几步：创建动画组、创建几个基本动画或关键帧动画、将动画添加至动画组、设置动画组属性、将动画组添加至图层。</p>
+<p>下面用一段代码来演示创建过程。</p>
+<pre><code>- (CAKeyframeAnimation*) transitionAnimation
+{
+    CAKeyframeAnimation* keyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:@&quot;position&quot;];
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, nil, layer.position.x, layer.position.y);
+    CGPathAddCurveToPoint(path, nil, 160, 280, -30, 300, 55, 400);
+
+    keyframeAnimation.path = path;
+
+    return keyframeAnimation;
+}
+
+-(CABasicAnimation*) rotationAnimation
+{
+    CABasicAnimation* rotateAnimation = [CABasicAnimation animationWithKeyPath:@&quot;transform.rotation.z&quot;];
+
+    rotateAnimation.toValue = [NSNumber numberWithFloat:M_PI*2];
+    rotateAnimation.repeatCount = HUGE_VAL;
+    rotateAnimation.removedOnCompletion = NO;
+
+    return rotateAnimation;
+}
+
+- (void)animationGroup
+{
+    CAAnimationGroup* group = [CAAnimationGroup animation];
+    CABasicAnimation* basicAnimation = [self rotationAnimation];
+    CAKeyframeAnimation* keyframeAnimation=[self transitionAnimation];
+
+    group.animations = @[basicAnimation,keyframeAnimation];
+    group.duration = 8.0;
+    group.delegate = self;
+    group.beginTime = CACurrentMediaTime()+3;
+
+    [layer addAnimation:group forKey:@&quot;gropuAnimation&quot;];
+
+}
+</code></pre><p>上面的动画组是平移和旋转的复合效果，下面说一下利用代理方法在动画结束后更改属性值为动画终值的方法，因为有隐式动画的存在，还涉及到关闭隐式动画的问题。方法见下面的代码：</p>
+<pre><code>- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    // 1[CATransaction begin];
+    // 2[CATransaction setDisableActions:YES];
+    //设置属性值
+    layer.position=CGPointMake(55, 400);
+
+    // 3[CATransaction commit];
+}
+</code></pre><p>动画结束后会调用<code>animationDidStop: finished:</code>方法，在该方法中我们进行属性值的修改，注释的1、2、3是关闭隐私动画的代码。</p>
+<p>效果图如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/group.gif" alt="group"></p>
+<h4 id="u8F6C_u573A_u52A8_u753B"><a href="#u8F6C_u573A_u52A8_u753B" class="headerlink" title="转场动画"></a>转场动画</h4><p>转场动画时视图切换时的动画效果，比如翻页效果，立方体效果等。这里介绍的是提供的一些方法，下面的代码会展示一个转场动画的创建过程。</p>
+<pre><code>//初始化转场动画
+CATransition *transition = [[CATransition alloc] init];
+//transition.type=@&quot;cube&quot;;//立方体效果
+//transition.type=@&quot;oglFlip&quot;;//翻转效果
+//transition.type=@&quot;suckEffect&quot;;//抽纸效果
+//效果类型
+transition.type=@&quot;rippleEffect&quot;;//波纹效果
+//transition.type=@&quot;cameraIrisHollowOpen&quot;;//摄像头打开效果
+//以上是私有api，公开api有fade movein push reveal
+
+if (next) {
+    //确定转场方向
+    transition.subtype = kCATransitionFromRight;
+}else
+    transition.subtype = kCATransitionFromLeft;
+//设置动画时间
+transition.duration = 1.0;
+//设定下一视图
+imageView.image = [self nextImage:next];
+//将动画加入图层
+[imageView.layer addAnimation:transition forKey:@&quot;transition&quot;];
+</code></pre><p>创建的过程注释中很清晰，系统提供了很多方法，上面的代码中更改<code>type</code>属性就可以实现不同的效果。上面的代码中是波纹效果。效果图如下：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/zhuanchang.gif" alt="zhuanchang"></p>
+<h4 id="u52A8_u753B_u7684_u6682_u505C_u4E0E_u6062_u590D_u64CD_u4F5C"><a href="#u52A8_u753B_u7684_u6682_u505C_u4E0E_u6062_u590D_u64CD_u4F5C" class="headerlink" title="动画的暂停与恢复操作"></a>动画的暂停与恢复操作</h4><p> CAAniattion和CALayer都有一个<code>speed</code> 属性，可以对动画的速度进行控制，当速度为0 时就可以有暂停的效果，问题的关键在于2个点，当<code>speed</code>设置为0时，出现的状态应该为暂停前的状态，恢复时能够承接暂停前状态运行下去，解决这个问题要结合<code>offset</code>和<code>beginTime</code>两个属性，关于动画中的时间的诸多概念推荐一篇文章<a href="">控制动画时间</a>。下面给出暂停和恢复的代码：</p>
+<pre><code>-(void) animationResume
+{
+    //计算动画开始时间，确保恢复状态
+    CFTimeInterval begintime= CACurrentMediaTime()-layer.timeOffset;
+    layer.timeOffset=0;
+    layer.beginTime=begintime;
+    //恢复速度
+    layer.speed=1;
+
+}
+
+-(void) animationPause
+{    //获取图层动画的媒体时间
+    CFTimeInterval interval=[layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    //设置时间偏移量，确保暂停状态
+    [layer setTimeOffset:interval];
+    //速度为0
+    layer.speed=0;
+}
+</code></pre><p>上面代码中图层中的所有动画将同时暂停和恢复。效果如下图：</p>
+<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/zanting.gif" alt="zanting"></p>
+<h3 id="UIView_u5C01_u88C5_u52A8_u753B"><a href="#UIView_u5C01_u88C5_u52A8_u753B" class="headerlink" title="UIView封装动画"></a>UIView封装动画</h3><p>UIView对于基本动画关键帧动画和转场动画都有封装，使用方法也比core animation也要简单。下面我们用UIView封装动画来实现上面用core animation实现的基础动画、关键帧动画、转场动画效果。</p>
+<h4 id="u57FA_u7840_u52A8_u753B"><a href="#u57FA_u7840_u52A8_u753B" class="headerlink" title="基础动画"></a>基础动画</h4><p>基础动画的实现方法有两种一种是block方法，另一种是静态方法。下面给出了这两种方法的代码实现。</p>
+<pre><code> [UIView animateWithDuration:3.0 delay:2.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    bubbleImageView.layer.transform = CATransform3DMakeRotation(M_PI, 0, 0, 1);
+} completion:^(BOOL finished) {
+    if (finished) {
+        NSLog(@&quot;finished&quot;);
+    }
+}];
+</code></pre><p>block方法</p>
+<pre><code>  [UIView beginAnimations:@&quot;bubble&quot; context:nil];
+[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+[UIView setAnimationDuration:2.0];
+bubbleImageView.layer.transform = CATransform3DMakeRotation(M_PI, 0, 0, 1);
+[UIView commitAnimations];
+</code></pre><p>静态方法</p>
+<h4 id="u5173_u952E_u5E27_u52A8_u753B-1"><a href="#u5173_u952E_u5E27_u52A8_u753B-1" class="headerlink" title="关键帧动画"></a>关键帧动画</h4><pre><code>[UIView animateKeyframesWithDuration:10.0 delay:0 options:UIViewAnimationOptionRepeat|UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+    UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
+    CATransform3D transform = CATransform3DIdentity;
+    CATransform3DScale(rotation, 0.5, 0.5, 0.5);
+        imageView.layer.transform = scale;
+    }];
+
+    [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+        CATransform3D transform = CATransform3DIdentity;
+        CATransform3D rotation = CATransform3DRotate(transform, 2*M_PI, 0, 0, 1);
+        CATransform3D scale = CATransform3DScale(rotation, 1.0,1.0,1.0);
+        imageView.layer.transform = scale;
+    }];
+
+} completion:^(BOOL finished) {
+    NSLog(@&quot;finished&quot;);
+}];
+</code></pre><p>实现的方法很简单就不多赘述了。</p>
+<h4 id="u8F6C_u573A_u52A8_u753B-1"><a href="#u8F6C_u573A_u52A8_u753B-1" class="headerlink" title="转场动画"></a>转场动画</h4><pre><code>UIViewAnimationOptions options;
+if (next) {
+    options = UIViewAnimationOptionCurveLinear|UIViewAnimationOptionTransitionFlipFromRight;
+}else
+    options = UIViewAnimationOptionCurveLinear|UIViewAnimationOptionTransitionFlipFromLeft;
+
+[UIView transitionWithView:imageView duration:1.0 options:options animations:^{
+    imageView.image=[self nextImage:next];
+} completion:nil];
+</code></pre><p> 有了core animation的知识基础后，利用UIView封装动画变的非常简单。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>这篇博了主要讲了CALayer的绘制、core animation动画实现以及UIView封装动画的实现，其中利用封装的方法更为简单，core animation可以对动画进行更细致的控制以实现更复杂的效果，按需使用吧。</p>
+<p>有兴趣的同学可以下载<a href="https://github.com/jiliangzhai/RUSTCALayerandCoreAnimation" target="_blank" rel="external">DEMO</a>看一下。<br>作为新手写的东西可能不尽深入与详尽，内容主要的重心还是放在了功能的实现上，相关内容图鉴一篇博客：<a href="http://www.cnblogs.com/kenshincui/p/3972100.html#uiviewanimation" target="_blank" rel="external">iOS开发系列–让你的应用“动”起来</a>。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[这篇博客的内容主要是三个部分：CALayer的绘制、Core Animation、UIView封装的动画。利用演示代码展示绘制及动画效果的实现。]]>
+    
+    </summary>
+    
+      <category term="CALayer CoreAnimation" scheme="http://rustblogs.com/tags/CALayer-CoreAnimation/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Quartz 2D图形绘制基础]]></title>
