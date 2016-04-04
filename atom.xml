@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://rustblogs.com/"/>
-  <updated>2016-01-14T15:03:02.000Z</updated>
+  <updated>2016-03-24T03:25:48.000Z</updated>
   <id>http://rustblogs.com/</id>
   
   <author>
@@ -15,11 +15,104 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[时间与日期的处理]]></title>
+    <link href="http://rustblogs.com/2016/03/23/date-and-time-process/"/>
+    <id>http://rustblogs.com/2016/03/23/date-and-time-process/</id>
+    <published>2016-03-23T05:50:42.000Z</published>
+    <updated>2016-03-24T03:25:48.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002"><a href="#u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002" class="headerlink" title="时间与日期的处理。"></a>时间与日期的处理。</h2><p>这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。博客中不会将所有方法都叙述一遍，主要是一些常用方法及细节。</p>
+<h3 id="NSDate"><a href="#NSDate" class="headerlink" title="NSDate"></a>NSDate</h3><pre><code>NSDate *date = [NSDate date];
+//最常用的方法，返回的是计算机当前时间，需要注意的是返回的是GMT时间。
+</code></pre><p>也可以利用时间偏移量进行NSDate的初始化，方法如下：</p>
+<pre><code>NSDate *date = [NSDate dateWithTimeInterval:(NSTimeInterval) sinceDate:(nonnull NSDate *)];
+//以参数日期为基准进行偏移，得到目标时期。
+NSDate *date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)];
+//以1970-01-01 00:00:00 ＋0000为基准进行偏移得到目标日期。
+NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval)];
+//以当前时间为基准进行偏移得到目标日期。
+NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:(NSTimeInterval)];
+//以参考时间2001-01-01 00:00:00为基准进行偏移得到目标时间。
+</code></pre><p>两个日期之前可以进行是否相同以及较早/较晚的判断方法如下：</p>
+<pre><code>//判断两个日期是否相同。
+BOOL isEqual = [date1 isEqualToDate:date2];
+//返回较晚的那个日期
+NSDate *laterDate = [date1 laterDate:date2];
+//返回较早的那个日期
+NSDate *earlierDate = [date1 earlierDate:date2];
+//compare方法，根据返回的是NSOrderedSame/NSOrderedAscending/NSOrderedDescending判断两日期的差别。
+NSComparisonResult result = [date1 compare:date2];
+</code></pre><p>日期之间还可以进行时间间隔的计算，主要方法如下：</p>
+<pre><code>NSInteger interval = [date1 timeIntervalSince1970];
+NSInteger interval = [date1 timeIntervalSinceDate:date2];
+NSInteger interval = [date1 timeIntervalSinceNow];
+NSInteger tnterval = [date1 timeIntervalSinceReferenceDate];
+//这些方法与以时间偏移量进行日期的初始化过程一一对应，为反过程。
+</code></pre><h3 id="NSDateComponents"><a href="#NSDateComponents" class="headerlink" title="NSDateComponents"></a>NSDateComponents</h3><p>NSDateComponents顾名思义包含了组成日期的每个部分，例如年、月、日、时、分等，这样我们可以利用个部分去组成一个日期，也可以从一个日期中获得我们想得到的部分信息。除了以上部分外，该类还包含了时区，历法信息。</p>
+<p>说到NSDateComponents，我们必须提到NSCalendar类，该类提供的两个方法就可以实现我们上面提到的两个过程及由日期各部分获得日期和由日期得到各部分，代码如下：</p>
+<pre><code> NSCalendar *calendar = [NSCalendar currentCalendar];
+//NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];这是两个类方法，区别是前者获得的结果会存在缓存中即使更改了系统历法也不会改变，后者在更改后会获得更改后的历法。
+NSDateComponents *components = [[NSDateComponents alloc] init];
+[components setYear:16];
+[components setMonth:03];
+[components setDay:24];
+//设置NSDateComponents
+NSDate *date = [calendar dateFromComponents:components];
+//根据components获得date
+NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
+//由date获得components
+</code></pre><p>NSDateComponens还可以作为偏移，在基准日期的基础上获得新的日期，或者得到两个日期之间的差值以NSDateComponents表示，两个过程如下：</p>
+<pre><code>NSCalendar *calendar = [NSCalendar currentCalendar];
+NSDateComponents *components = [[NSDateComponents alloc] init];
+[components setYear:16];
+[components setMonth:03];
+[components setDay:24];
+//设置NSDateComponents
+NSDate *date = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
+//以components作为差值，获得新的日期。
+NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:[NSDate date] toDate:date options:0];
+//获得两个日期之间的差值以components表示
+</code></pre><h3 id="NSDateFormatter"><a href="#NSDateFormatter" class="headerlink" title="NSDateFormatter"></a>NSDateFormatter</h3><p>最主要的方法就是<code>stringFromDate</code>和<code>dateFromString</code>，可以把日期按照设定的格式输出字符串，或者把字符串按照设定的格式转换为日期。方法如下：</p>
+<pre><code>NSDate *date = [NSDate date];
+NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+[formatter setDateFormat:@&quot;yyyy-MM-dd HH-mm-ss&quot;];
+NSString *dateStr = [formatter stringFromDate:date];
+//日期转字符串
+NSDate *strToDate = [formatter dateFromString:dateStr];
+//字符串转日期
+</code></pre><p>NSDateFormatter是包含时区信息的，更改时区使用 <code>setTimeZone方法</code> 。</p>
+<h3 id="NSTimeZone"><a href="#NSTimeZone" class="headerlink" title="NSTimeZone"></a>NSTimeZone</h3><p>NSTimeZone主要的方法就是进行时区间的转化，以避免时区不同带来的问题，主要方法ruxia：</p>
+<pre><code>NSTimeZone *zone = [NSTimeZone systemTimeZone];
+NSString *str = [zone abbreviation];
+//系统时区
+
+NSTimeZone *localZone = [NSTimeZone localTimeZone];
+NSString *str2 = [localZone abbreviation];
+//当地时区
+NSDate *date = [NSDate date];
+NSInteger offSet = [zone secondsFromGMTForDate:date];
+NSDate *localDate = [date dateByAddingTimeInterval:offSet];
+//根据时区差值更新日期
+
+NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
+//获得时区名称
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。]]>
+    
+    </summary>
+    
+      <category term="NSDate" scheme="http://rustblogs.com/tags/NSDate/"/>
+    
+      <category term="ios开发" scheme="http://rustblogs.com/categories/ios%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[CALayer and Core Animation]]></title>
     <link href="http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/"/>
     <id>http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/</id>
     <published>2016-01-13T13:22:22.000Z</published>
-    <updated>2016-01-14T15:03:02.000Z</updated>
+    <updated>2016-03-24T03:23:55.000Z</updated>
     <content type="html"><![CDATA[<h2 id="CAlayer_and_Core_Animation"><a href="#CAlayer_and_Core_Animation" class="headerlink" title="CAlayer and Core Animation"></a>CAlayer and Core Animation</h2><h3 id="CALayer_u7ED8_u5236"><a href="#CALayer_u7ED8_u5236" class="headerlink" title="CALayer绘制"></a>CALayer绘制</h3><p>CALayer的绘制主要设计两个方法<code>drawLayer: InContext:</code>和<code>drawInContext:</code>两个方法都提供了一个Context所以绘制方法类似于上一篇讲到的Quartz 2D的绘制方法，可以绘制基本图形，图片以及文字。另CALyer的很多属性都包含隐式动画效果，属性的改变会引发动画效果。</p>
 <p>下面这段代码演示的就是CALyer中的基本绘制方法遗迹隐式动画的效果。</p>
 <pre><code>- (void)viewDidLoad {
@@ -336,6 +429,8 @@ if (next) {
     </summary>
     
       <category term="CALayer CoreAnimation" scheme="http://rustblogs.com/tags/CALayer-CoreAnimation/"/>
+    
+      <category term="ios开发" scheme="http://rustblogs.com/categories/ios%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   

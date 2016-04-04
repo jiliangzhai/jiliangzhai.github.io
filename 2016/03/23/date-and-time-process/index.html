@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo blog," />
+  <meta name="keywords" content="NSDate," />
 
 
 
@@ -53,17 +53,16 @@
 
 
 
-<meta name="description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
+<meta name="description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一篇博客">
-<meta property="og:url" content="http://rustblogs.com/2015/12/21/friestblog/index.html">
+<meta property="og:title" content="时间与日期的处理">
+<meta property="og:url" content="http://rustblogs.com/2016/03/23/date-and-time-process/index.html">
 <meta property="og:site_name" content="生锈的车轮">
-<meta property="og:description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
-<meta property="og:image" content="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg">
-<meta property="og:updated_time" content="2015-12-23T11:30:01.000Z">
+<meta property="og:description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
+<meta property="og:updated_time" content="2016-03-24T03:25:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一篇博客">
-<meta name="twitter:description" content="开博第一篇博客，理所当然的要总结一下博客的搭建过程，利用hexo搭建个人博客在网上有很多详细的教程，在这里就不多赘述，仅大致描述一下。">
+<meta name="twitter:title" content="时间与日期的处理">
+<meta name="twitter:description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
 
 
 
@@ -75,7 +74,7 @@
   };
 </script>
 
-  <title> 第一篇博客 | 生锈的车轮 </title>
+  <title> 时间与日期的处理 | 生锈的车轮 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -197,7 +196,7 @@
             
             
               
-                第一篇博客
+                时间与日期的处理
               
             
           </h1>
@@ -206,8 +205,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-21T22:46:40+08:00" content="2015-12-21">
-              2015-12-21
+            <time itemprop="dateCreated" datetime="2016-03-23T13:50:42+08:00" content="2016-03-23">
+              2016-03-23
             </time>
           </span>
 
@@ -216,8 +215,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/ios开发/" itemprop="url" rel="index">
+                    <span itemprop="name">ios开发</span>
                   </a>
                 </span>
 
@@ -232,8 +231,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/12/21/friestblog/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/21/friestblog/" itemprop="commentsCount"></span>
+                <a href="/2016/03/23/date-and-time-process/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/23/date-and-time-process/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -252,24 +251,82 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><a href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2" class="headerlink" title="利用hexo搭建博客"></a>利用hexo搭建博客</h2><p>本博客是利用hexo+github+七牛做图床搭建的，并绑定了个人域名至guthub，使用的主题名是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>。</p>
-<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><p>安装hexo,需要Node,安装Node后在终端输入命令：</p>
-<p><code>npm install -g hexo</code></p>
-<p><code>hexo init</code></p>
-<p>即可安装。</p>
-<p>hexo常用命令：</p>
-<p><code>hexo new &quot;postName&quot;</code> //新建文章</p>
-<p><code>hexo server</code> // 启用本地服务</p>
-<p><code>hexo clean</code> //清除缓存</p>
-<p><code>hexo g</code> //生成静态网页</p>
-<p><code>hexo d</code> //开始部署</p>
-<p>博客内容使用Markdown进行编写，推荐MOU编辑器。</p>
-<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><p>github账号很多人都会有，需要做的就是建立一个名为userName.github.io的仓库，然后在你的博客根目录的_config.yml中进行配置就OK啦。</p>
-<h3 id="u56FE_u5E8A"><a href="#u56FE_u5E8A" class="headerlink" title="图床"></a>图床</h3><p>我使用的是七牛云储存，大致过程为申请账号，建立空间，同步本地文件至空间，然后就可以使用外链了。<br>同步本地文件至空间使用的是qrsync同步工具，具体教程可以看这篇文章：<a href="http://www.douban.com/note/526859806/" target="_blank" rel="external">如何使用七牛云做为图床</a>。</p>
-<h3 id="u4E3B_u9898"><a href="#u4E3B_u9898" class="headerlink" title="主题"></a>主题</h3><p>本博客使用的是 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，比较简洁，作者写的配置信息很详细，有兴趣的同学可以看一下。</p>
-<h3 id="u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED"><a href="#u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED" class="headerlink" title="第一篇博客的结束语"></a>第一篇博客的结束语</h3><p>博客搭建的过程大概就是这些了，本人IOS开发菜鸟目前还在机械行业工作，博客以后的内容主要会以IOS开发为主，还会有学习相关知识的内容。希望自己加油。</p>
-<p><img src="http://7xpcyy.com1.z0.glb.clouddn.com/boy.jpg" alt="image"></p>
-</span>
+        <span itemprop="articleBody"><h2 id="u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002"><a href="#u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002" class="headerlink" title="时间与日期的处理。"></a>时间与日期的处理。</h2><p>这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。博客中不会将所有方法都叙述一遍，主要是一些常用方法及细节。</p>
+<h3 id="NSDate"><a href="#NSDate" class="headerlink" title="NSDate"></a>NSDate</h3><pre><code>NSDate *date = [NSDate date];
+//最常用的方法，返回的是计算机当前时间，需要注意的是返回的是GMT时间。
+</code></pre><p>也可以利用时间偏移量进行NSDate的初始化，方法如下：</p>
+<pre><code>NSDate *date = [NSDate dateWithTimeInterval:(NSTimeInterval) sinceDate:(nonnull NSDate *)];
+//以参数日期为基准进行偏移，得到目标时期。
+NSDate *date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)];
+//以1970-01-01 00:00:00 ＋0000为基准进行偏移得到目标日期。
+NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval)];
+//以当前时间为基准进行偏移得到目标日期。
+NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:(NSTimeInterval)];
+//以参考时间2001-01-01 00:00:00为基准进行偏移得到目标时间。
+</code></pre><p>两个日期之前可以进行是否相同以及较早/较晚的判断方法如下：</p>
+<pre><code>//判断两个日期是否相同。
+BOOL isEqual = [date1 isEqualToDate:date2];
+//返回较晚的那个日期
+NSDate *laterDate = [date1 laterDate:date2];
+//返回较早的那个日期
+NSDate *earlierDate = [date1 earlierDate:date2];
+//compare方法，根据返回的是NSOrderedSame/NSOrderedAscending/NSOrderedDescending判断两日期的差别。
+NSComparisonResult result = [date1 compare:date2];
+</code></pre><p>日期之间还可以进行时间间隔的计算，主要方法如下：</p>
+<pre><code>NSInteger interval = [date1 timeIntervalSince1970];
+NSInteger interval = [date1 timeIntervalSinceDate:date2];
+NSInteger interval = [date1 timeIntervalSinceNow];
+NSInteger tnterval = [date1 timeIntervalSinceReferenceDate];
+//这些方法与以时间偏移量进行日期的初始化过程一一对应，为反过程。
+</code></pre><h3 id="NSDateComponents"><a href="#NSDateComponents" class="headerlink" title="NSDateComponents"></a>NSDateComponents</h3><p>NSDateComponents顾名思义包含了组成日期的每个部分，例如年、月、日、时、分等，这样我们可以利用个部分去组成一个日期，也可以从一个日期中获得我们想得到的部分信息。除了以上部分外，该类还包含了时区，历法信息。</p>
+<p>说到NSDateComponents，我们必须提到NSCalendar类，该类提供的两个方法就可以实现我们上面提到的两个过程及由日期各部分获得日期和由日期得到各部分，代码如下：</p>
+<pre><code> NSCalendar *calendar = [NSCalendar currentCalendar];
+//NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];这是两个类方法，区别是前者获得的结果会存在缓存中即使更改了系统历法也不会改变，后者在更改后会获得更改后的历法。
+NSDateComponents *components = [[NSDateComponents alloc] init];
+[components setYear:16];
+[components setMonth:03];
+[components setDay:24];
+//设置NSDateComponents
+NSDate *date = [calendar dateFromComponents:components];
+//根据components获得date
+NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
+//由date获得components
+</code></pre><p>NSDateComponens还可以作为偏移，在基准日期的基础上获得新的日期，或者得到两个日期之间的差值以NSDateComponents表示，两个过程如下：</p>
+<pre><code>NSCalendar *calendar = [NSCalendar currentCalendar];
+NSDateComponents *components = [[NSDateComponents alloc] init];
+[components setYear:16];
+[components setMonth:03];
+[components setDay:24];
+//设置NSDateComponents
+NSDate *date = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
+//以components作为差值，获得新的日期。
+NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:[NSDate date] toDate:date options:0];
+//获得两个日期之间的差值以components表示
+</code></pre><h3 id="NSDateFormatter"><a href="#NSDateFormatter" class="headerlink" title="NSDateFormatter"></a>NSDateFormatter</h3><p>最主要的方法就是<code>stringFromDate</code>和<code>dateFromString</code>，可以把日期按照设定的格式输出字符串，或者把字符串按照设定的格式转换为日期。方法如下：</p>
+<pre><code>NSDate *date = [NSDate date];
+NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+[formatter setDateFormat:@&quot;yyyy-MM-dd HH-mm-ss&quot;];
+NSString *dateStr = [formatter stringFromDate:date];
+//日期转字符串
+NSDate *strToDate = [formatter dateFromString:dateStr];
+//字符串转日期
+</code></pre><p>NSDateFormatter是包含时区信息的，更改时区使用 <code>setTimeZone方法</code> 。</p>
+<h3 id="NSTimeZone"><a href="#NSTimeZone" class="headerlink" title="NSTimeZone"></a>NSTimeZone</h3><p>NSTimeZone主要的方法就是进行时区间的转化，以避免时区不同带来的问题，主要方法ruxia：</p>
+<pre><code>NSTimeZone *zone = [NSTimeZone systemTimeZone];
+NSString *str = [zone abbreviation];
+//系统时区
+
+NSTimeZone *localZone = [NSTimeZone localTimeZone];
+NSString *str2 = [localZone abbreviation];
+//当地时区
+NSDate *date = [NSDate date];
+NSInteger offSet = [zone secondsFromGMTForDate:date];
+NSDate *localDate = [date dateByAddingTimeInterval:offSet];
+//根据时区差值更新日期
+
+NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
+//获得时区名称
+</code></pre></span>
       
     </div>
 
@@ -277,7 +334,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo-blog/" rel="tag">#hexo blog</a>
+            <a href="/tags/NSDate/" rel="tag">#NSDate</a>
           
         </div>
       
@@ -286,13 +343,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/01/13/CALayer-and-Core-Animation/" rel="next" title="CALayer and Core Animation">
+                <i class="fa fa-chevron-left"></i> CALayer and Core Animation
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/26/gdc/" rel="prev" title="ios开发－GCD实现多线程开发">
-                ios开发－GCD实现多线程开发 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -319,8 +376,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/12/21/friestblog/"
-           data-title="第一篇博客" data-url="http://rustblogs.com/2015/12/21/friestblog/">
+      <div class="ds-thread" data-thread-key="2016/03/23/date-and-time-process/"
+           data-title="时间与日期的处理" data-url="http://rustblogs.com/2016/03/23/date-and-time-process/">
       </div>
     
   </div>
@@ -435,7 +492,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5229_u7528hexo_u642D_u5EFA_u535A_u5BA2"><span class="nav-number">1.</span> <span class="nav-text">利用hexo搭建博客</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo"><span class="nav-number">1.1.</span> <span class="nav-text">hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#github"><span class="nav-number">1.2.</span> <span class="nav-text">github</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u5E8A"><span class="nav-number">1.3.</span> <span class="nav-text">图床</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E3B_u9898"><span class="nav-number">1.4.</span> <span class="nav-text">主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B2C_u4E00_u7BC7_u535A_u5BA2_u7684_u7ED3_u675F_u8BED"><span class="nav-number">1.5.</span> <span class="nav-text">第一篇博客的结束语</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002"><span class="nav-number">1.</span> <span class="nav-text">时间与日期的处理。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDate"><span class="nav-number">1.1.</span> <span class="nav-text">NSDate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDateComponents"><span class="nav-number">1.2.</span> <span class="nav-text">NSDateComponents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDateFormatter"><span class="nav-number">1.3.</span> <span class="nav-text">NSDateFormatter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSTimeZone"><span class="nav-number">1.4.</span> <span class="nav-text">NSTimeZone</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
