@@ -108,6 +108,33 @@ NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
   </entry>
   
   <entry>
+    <title><![CDATA[自言自语功能详解]]></title>
+    <link href="http://rustblogs.com/2016/01/13/%E8%87%AA%E8%A8%80%E8%87%AA%E8%AF%AD%E5%8A%9F%E8%83%BD%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://rustblogs.com/2016/01/13/自言自语功能详解/</id>
+    <published>2016-01-13T13:22:22.000Z</published>
+    <updated>2016-05-22T07:15:09.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="u201C_u81EA_u8A00_u81EA_u8BED_u201D_u4E3B_u8981_u529F_u80FD"><a href="#u201C_u81EA_u8A00_u81EA_u8BED_u201D_u4E3B_u8981_u529F_u80FD" class="headerlink" title="“自言自语”主要功能"></a>“自言自语”主要功能</h2><ol>
+<li>密码登录</li>
+<li>密码找回</li>
+<li>用户及对话对象编辑</li>
+<li>转换输入对象</li>
+<li>数据统计</li>
+<li>创建多个对象</li>
+<li>“么么哒”和“弹球”互动效果</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[“自言自语”是一款以记事本为基本功能的app，其特点是以聊天的方式进行信息录入，支持文本、语音、图片的录入。并包含密码登录、密码找回、用户及对象编辑、数据统计及两种互动效果。]]>
+    
+    </summary>
+    
+      <category term="CALayer CoreAnimation" scheme="http://rustblogs.com/tags/CALayer-CoreAnimation/"/>
+    
+      <category term="app" scheme="http://rustblogs.com/categories/app/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[CALayer and Core Animation]]></title>
     <link href="http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/"/>
     <id>http://rustblogs.com/2016/01/13/CALayer-and-Core-Animation/</id>

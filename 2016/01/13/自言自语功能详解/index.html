@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="NSDate," />
+  <meta name="keywords" content="CALayer CoreAnimation," />
 
 
 
@@ -53,16 +53,16 @@
 
 
 
-<meta name="description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
+<meta name="description" content="“自言自语”是一款以记事本为基本功能的app，其特点是以聊天的方式进行信息录入，支持文本、语音、图片的录入。并包含密码登录、密码找回、用户及对象编辑、数据统计及两种互动效果。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="时间与日期的处理">
-<meta property="og:url" content="http://rustblogs.com/2016/03/23/date-and-time-process/index.html">
+<meta property="og:title" content="自言自语功能详解">
+<meta property="og:url" content="http://rustblogs.com/2016/01/13/自言自语功能详解/index.html">
 <meta property="og:site_name" content="生锈的车轮">
-<meta property="og:description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
-<meta property="og:updated_time" content="2016-03-24T03:25:48.000Z">
+<meta property="og:description" content="“自言自语”是一款以记事本为基本功能的app，其特点是以聊天的方式进行信息录入，支持文本、语音、图片的录入。并包含密码登录、密码找回、用户及对象编辑、数据统计及两种互动效果。">
+<meta property="og:updated_time" content="2016-05-22T07:15:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="时间与日期的处理">
-<meta name="twitter:description" content="这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。">
+<meta name="twitter:title" content="自言自语功能详解">
+<meta name="twitter:description" content="“自言自语”是一款以记事本为基本功能的app，其特点是以聊天的方式进行信息录入，支持文本、语音、图片的录入。并包含密码登录、密码找回、用户及对象编辑、数据统计及两种互动效果。">
 
 
 
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title> 时间与日期的处理 | 生锈的车轮 </title>
+  <title> 自言自语功能详解 | 生锈的车轮 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -196,7 +196,7 @@
             
             
               
-                时间与日期的处理
+                自言自语功能详解
               
             
           </h1>
@@ -205,8 +205,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-03-23T13:50:42+08:00" content="2016-03-23">
-              2016-03-23
+            <time itemprop="dateCreated" datetime="2016-01-13T21:22:22+08:00" content="2016-01-13">
+              2016-01-13
             </time>
           </span>
 
@@ -215,8 +215,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/ios开发/" itemprop="url" rel="index">
-                    <span itemprop="name">ios开发</span>
+                  <a href="/categories/app/" itemprop="url" rel="index">
+                    <span itemprop="name">app</span>
                   </a>
                 </span>
 
@@ -231,8 +231,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/03/23/date-and-time-process/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/23/date-and-time-process/" itemprop="commentsCount"></span>
+                <a href="/2016/01/13/自言自语功能详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/13/自言自语功能详解/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -251,82 +251,16 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002"><a href="#u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002" class="headerlink" title="时间与日期的处理。"></a>时间与日期的处理。</h2><p>这篇博客的内容主要是IOS开发中可能会遇到的时间与日期的处理，虽不复杂但偶尔还会给你添点小麻烦，本文中涉及到的类包括：NSDate、NSTimeZone、NSDateComponents以及NSCalendar。博客中不会将所有方法都叙述一遍，主要是一些常用方法及细节。</p>
-<h3 id="NSDate"><a href="#NSDate" class="headerlink" title="NSDate"></a>NSDate</h3><pre><code>NSDate *date = [NSDate date];
-//最常用的方法，返回的是计算机当前时间，需要注意的是返回的是GMT时间。
-</code></pre><p>也可以利用时间偏移量进行NSDate的初始化，方法如下：</p>
-<pre><code>NSDate *date = [NSDate dateWithTimeInterval:(NSTimeInterval) sinceDate:(nonnull NSDate *)];
-//以参数日期为基准进行偏移，得到目标时期。
-NSDate *date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)];
-//以1970-01-01 00:00:00 ＋0000为基准进行偏移得到目标日期。
-NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval)];
-//以当前时间为基准进行偏移得到目标日期。
-NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:(NSTimeInterval)];
-//以参考时间2001-01-01 00:00:00为基准进行偏移得到目标时间。
-</code></pre><p>两个日期之前可以进行是否相同以及较早/较晚的判断方法如下：</p>
-<pre><code>//判断两个日期是否相同。
-BOOL isEqual = [date1 isEqualToDate:date2];
-//返回较晚的那个日期
-NSDate *laterDate = [date1 laterDate:date2];
-//返回较早的那个日期
-NSDate *earlierDate = [date1 earlierDate:date2];
-//compare方法，根据返回的是NSOrderedSame/NSOrderedAscending/NSOrderedDescending判断两日期的差别。
-NSComparisonResult result = [date1 compare:date2];
-</code></pre><p>日期之间还可以进行时间间隔的计算，主要方法如下：</p>
-<pre><code>NSInteger interval = [date1 timeIntervalSince1970];
-NSInteger interval = [date1 timeIntervalSinceDate:date2];
-NSInteger interval = [date1 timeIntervalSinceNow];
-NSInteger tnterval = [date1 timeIntervalSinceReferenceDate];
-//这些方法与以时间偏移量进行日期的初始化过程一一对应，为反过程。
-</code></pre><h3 id="NSDateComponents"><a href="#NSDateComponents" class="headerlink" title="NSDateComponents"></a>NSDateComponents</h3><p>NSDateComponents顾名思义包含了组成日期的每个部分，例如年、月、日、时、分等，这样我们可以利用个部分去组成一个日期，也可以从一个日期中获得我们想得到的部分信息。除了以上部分外，该类还包含了时区，历法信息。</p>
-<p>说到NSDateComponents，我们必须提到NSCalendar类，该类提供的两个方法就可以实现我们上面提到的两个过程及由日期各部分获得日期和由日期得到各部分，代码如下：</p>
-<pre><code> NSCalendar *calendar = [NSCalendar currentCalendar];
-//NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];这是两个类方法，区别是前者获得的结果会存在缓存中即使更改了系统历法也不会改变，后者在更改后会获得更改后的历法。
-NSDateComponents *components = [[NSDateComponents alloc] init];
-[components setYear:16];
-[components setMonth:03];
-[components setDay:24];
-//设置NSDateComponents
-NSDate *date = [calendar dateFromComponents:components];
-//根据components获得date
-NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
-//由date获得components
-</code></pre><p>NSDateComponens还可以作为偏移，在基准日期的基础上获得新的日期，或者得到两个日期之间的差值以NSDateComponents表示，两个过程如下：</p>
-<pre><code>NSCalendar *calendar = [NSCalendar currentCalendar];
-NSDateComponents *components = [[NSDateComponents alloc] init];
-[components setYear:16];
-[components setMonth:03];
-[components setDay:24];
-//设置NSDateComponents
-NSDate *date = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
-//以components作为差值，获得新的日期。
-NSDateComponents *newComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:[NSDate date] toDate:date options:0];
-//获得两个日期之间的差值以components表示
-</code></pre><h3 id="NSDateFormatter"><a href="#NSDateFormatter" class="headerlink" title="NSDateFormatter"></a>NSDateFormatter</h3><p>最主要的方法就是<code>stringFromDate</code>和<code>dateFromString</code>，可以把日期按照设定的格式输出字符串，或者把字符串按照设定的格式转换为日期。方法如下：</p>
-<pre><code>NSDate *date = [NSDate date];
-NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-[formatter setDateFormat:@&quot;yyyy-MM-dd HH-mm-ss&quot;];
-NSString *dateStr = [formatter stringFromDate:date];
-//日期转字符串
-NSDate *strToDate = [formatter dateFromString:dateStr];
-//字符串转日期
-</code></pre><p>NSDateFormatter是包含时区信息的，更改时区使用 <code>setTimeZone方法</code> 。</p>
-<h3 id="NSTimeZone"><a href="#NSTimeZone" class="headerlink" title="NSTimeZone"></a>NSTimeZone</h3><p>NSTimeZone主要的方法就是进行时区间的转化，以避免时区不同带来的问题，主要方法ruxia：</p>
-<pre><code>NSTimeZone *zone = [NSTimeZone systemTimeZone];
-NSString *str = [zone abbreviation];
-//系统时区
-
-NSTimeZone *localZone = [NSTimeZone localTimeZone];
-NSString *str2 = [localZone abbreviation];
-//当地时区
-NSDate *date = [NSDate date];
-NSInteger offSet = [zone secondsFromGMTForDate:date];
-NSDate *localDate = [date dateByAddingTimeInterval:offSet];
-//根据时区差值更新日期
-
-NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
-//获得时区名称
-</code></pre></span>
+        <span itemprop="articleBody"><h2 id="u201C_u81EA_u8A00_u81EA_u8BED_u201D_u4E3B_u8981_u529F_u80FD"><a href="#u201C_u81EA_u8A00_u81EA_u8BED_u201D_u4E3B_u8981_u529F_u80FD" class="headerlink" title="“自言自语”主要功能"></a>“自言自语”主要功能</h2><ol>
+<li>密码登录</li>
+<li>密码找回</li>
+<li>用户及对话对象编辑</li>
+<li>转换输入对象</li>
+<li>数据统计</li>
+<li>创建多个对象</li>
+<li>“么么哒”和“弹球”互动效果</li>
+</ol>
+</span>
       
     </div>
 
@@ -334,7 +268,7 @@ NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
       
         <div class="post-tags">
           
-            <a href="/tags/NSDate/" rel="tag">#NSDate</a>
+            <a href="/tags/CALayer-CoreAnimation/" rel="tag">#CALayer CoreAnimation</a>
           
         </div>
       
@@ -343,13 +277,17 @@ NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/01/13/自言自语功能详解/" rel="next" title="自言自语功能详解">
-                <i class="fa fa-chevron-left"></i> 自言自语功能详解
+              <a href="/2016/01/13/CALayer-and-Core-Animation/" rel="next" title="CALayer and Core Animation">
+                <i class="fa fa-chevron-left"></i> CALayer and Core Animation
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/23/date-and-time-process/" rel="prev" title="时间与日期的处理">
+                时间与日期的处理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -376,8 +314,8 @@ NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/23/date-and-time-process/"
-           data-title="时间与日期的处理" data-url="http://rustblogs.com/2016/03/23/date-and-time-process/">
+      <div class="ds-thread" data-thread-key="2016/01/13/自言自语功能详解/"
+           data-title="自言自语功能详解" data-url="http://rustblogs.com/2016/01/13/自言自语功能详解/">
       </div>
     
   </div>
@@ -492,7 +430,7 @@ NSArray *timeZones = [NSTimeZone knownTimeZoneNames];
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u65F6_u95F4_u4E0E_u65E5_u671F_u7684_u5904_u7406_u3002"><span class="nav-number">1.</span> <span class="nav-text">时间与日期的处理。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDate"><span class="nav-number">1.1.</span> <span class="nav-text">NSDate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDateComponents"><span class="nav-number">1.2.</span> <span class="nav-text">NSDateComponents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSDateFormatter"><span class="nav-number">1.3.</span> <span class="nav-text">NSDateFormatter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSTimeZone"><span class="nav-number">1.4.</span> <span class="nav-text">NSTimeZone</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u201C_u81EA_u8A00_u81EA_u8BED_u201D_u4E3B_u8981_u529F_u80FD"><span class="nav-number">1.</span> <span class="nav-text">“自言自语”主要功能</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
